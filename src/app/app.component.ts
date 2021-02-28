@@ -22,9 +22,9 @@ export class AppComponent implements OnInit {
 
   Submit() {
     if(this.form.valid) {
-      console.log('Form: ', this.form);
       const formData = {...this.form.value};
-      console.log("form data:", formData)
+      console.log("form data:", formData);
+      this.form.reset();
     }
   }
 }
