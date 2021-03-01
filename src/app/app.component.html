@@ -35,7 +35,11 @@
       </div>
     </div>
 
-    <button class="btn" type="submit" [disabled]="form.invalid"(click) = "addUser()">Submit!</button>
+    <button class="btn" type="submit" [disabled]="form.invalid"(click) = "addUser()" *ngIf="!isEditing; else editing">Submit!</button>
+    <ng-template #editing>
+      <button class="btn" type="submit" (click) = "editUser()">Edit!!!!</button>
+    </ng-template>
+
   </form>
-  <app-user-card *ngFor="let user of users" [user]="user"></app-user-card>
+  <app-user-card *ngFor="let user of users" [user]="user" (onDelete)="removeCard($event)" (onEdit) ="editCard($event)"></app-user-card>
 </div>

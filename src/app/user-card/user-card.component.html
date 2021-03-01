@@ -3,4 +3,7 @@
     <p><strong>Surname: {{ user.surname }}</strong></p>
     <span>{{ user.country }} &nbsp;</span>
     <span>{{ user.city }}</span>
+    <br>
+    <button class="btn btn-danger" (click)="deleteCard()">Delete Card</button>
+    <button class="btn" (click)="editCard()">Edit card</button>
 </div>

@@ -15,11 +15,13 @@ export default interface User {
 })
 export class AppComponent implements OnInit {
   form: FormGroup;
-  @Output() onAdd:EventEmitter<User> = new EventEmitter<User>();
+  @Output() onAdd: EventEmitter<User> = new EventEmitter<User>();
 
-  users : User[] = [
-    
-  ]
+  users: User[] = []
+
+  isEditing: boolean = false;
+
+  index: number = 0;
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -33,18 +35,53 @@ export class AppComponent implements OnInit {
   }
 
   Submit() {
-    if(this.form.valid) {
-      const formData = {...this.form.value};
+    if (this.form.valid) {
+      const formData = { ...this.form.value };
       console.log("form data:", formData);
       this.form.reset();
     }
   }
 
   addUser() {
-    const newUser: User = {name: this.form.get('name').value, 
-                           surname: this.form.get('surname').value, 
-                           country: this.form.get('address').get('country').value,
-                           city: this.form.get('address').get('city').value};
+    const newUser: User = {
+      name: this.form.get('name').value,
+      surname: this.form.get('surname').value,
+      country: this.form.get('address').get('country').value,
+      city: this.form.get('address').get('city').value
+    };
     this.users.unshift(newUser);
   }
+
+  removeCard(name: string) {
+    console.log(name);
+    this.users = this.users.filter(u => u.name !== name);
+  }
+
+  editCard(user: User) {
+    console.log(user);
+    this.isEditing = true;
+    this.form.get('name').setValue(user.name);
+    this.form.get('surname').setValue(user.surname);
+    this.form.get('address').get('country').setValue(user.country);
+    this.form.get('address').get('city').setValue(user.city);
+
+    this.index = this.users.indexOf(user);
+  }
+
+  editUser() {
+    const editedUser: User = {
+      name: this.form.get('name').value,
+      surname: this.form.get('surname').value,
+      country: this.form.get('address').get('country').value,
+      city: this.form.get('address').get('city').value
+    }
+
+    if (this.index !== -1) {
+      this.users[this.index] = editedUser;
+    }
+    this.isEditing = false;
+    this.form.reset();
+
+  }
 }
+
