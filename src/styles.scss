@@ -1,4 +1,14 @@
+@import 'themes';
+
+@import '~@nebular/theme/styles/globals';
+
+@include nb-install() {
+  @include nb-theme-global();
+};
 @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 * {
   box-sizing: border-box;
@@ -82,7 +92,6 @@ img {
 
 .card {
   padding: 1rem;
-  border: #ccc 1px dotted;
   margin: 0.7rem 0;
 }
 

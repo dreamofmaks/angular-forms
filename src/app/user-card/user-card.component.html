@@ -1,9 +1,10 @@
 <div class="card">
-    <p><strong>Name: {{ user.name }}</strong></p>
-    <p><strong>Surname: {{ user.surname }}</strong></p>
-    <span>{{ user.country }} &nbsp;</span>
-    <span>{{ user.city }}</span>
+    <p><strong>Name: </strong>{{ user.name }}</p>
+    <p><strong>Surname: </strong>{{ user.surname }}</p>
+    <span><strong>Location: </strong>{{ user.city }}, </span>
+    <span>{{ user.country }}</span>
+    <p><strong>Date of birth: </strong>{{ user.dateOfBirth | date: 'longDate'}}</p>
     <br>
-    <button class="btn btn-danger" (click)="deleteCard()">Delete Card</button>
-    <button class="btn" (click)="editCard()">Edit card</button>
+    <button class="btn" (click)="deleteCard()" nbButton shape="semi-round" status="danger">Delete Card</button>
+    <button class="btn" (click)="editCard()" nbButton shape="semi-round" status="success">Edit card</button>
 </div>

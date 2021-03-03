@@ -1,45 +1,72 @@
-<div class="container">
-  <form class="card" [formGroup] ="form" (ngSubmit)="Submit()">
-    <h1>Angular Forms</h1>
+<nb-layout>
+  <nb-layout-header fixed>
+    <button [nbContextMenu]="menuItems" nbButton nbContextMenuPlacement="right">Menu</button>
+  </nb-layout-header>
+  <nb-sidebar>Sidebar Content</nb-sidebar>
+  <nb-layout-column>
+    <div class="container">
+      <form class="" [formGroup] ="form" (ngSubmit)="Submit()">
+        <h1 style="text-align: center;">User Form</h1>
+        <div class="form-control">
+          <label>Name</label>
+          <input type="text" placeholder="Name" formControlName="name" nbInput fullWidth shape="semi-round">
+          <div class="validation" *ngIf="form.get('name').invalid && form.get('name').touched">
+            <small *ngIf="form.get('name').errors.required">Name is required</small>
+            <small *ngIf="form.get('name').errors.minlength">Min length should be {{ form.get('name').errors.minlength.requiredLength }} symbols</small>
+          </div>
+        </div>
 
-    <div class="form-control">
-      <label>Name</label>
-      <input type="text" placeholder="Name" formControlName="name">
-      <div class="validation" *ngIf="form.get('name').invalid && form.get('name').touched">
-        <small *ngIf="form.get('name').errors.required">Name is required</small>
-        <small *ngIf="form.get('name').errors.minlength">Min length should be {{ form.get('name').errors.minlength.requiredLength }} symbols</small>
-      </div>
+        <div class="form-control">
+          <label>Surname</label>
+          <input type="text" placeholder="Surname" formControlName="surname" nbInput fullWidth shape="semi-round">
+          <div class="validation" *ngIf="form.get('surname').invalid && form.get('surname').touched">
+            <small *ngIf="form.get('surname').errors.required">Surname is required</small>
+            <small *ngIf="form.get('surname').errors.minlength">Min length should be {{ form.get('surname').errors.minlength.requiredLength }} symbols</small>
+          </div>
+        </div>
+
+        <div class="card" formGroupName="address">
+          <h2>Additional Information</h2>
+          <div class="form-control">
+            <label>Location</label>
+            <nb-select fullWidth shape="semi-round" formControlName="country" placeholder="Country">
+              <nb-option selected="selected" value="Ukraine">Ukraine</nb-option>
+              <nb-option value="USA">USA</nb-option>
+              <nb-option value="Canada">Canada</nb-option>
+            </nb-select>
+          </div>
+          <div class="form-control">
+            <input type="text" placeholder="City" formControlName="city" nbInput fullWidth shape="semi-round">
+          </div>
+          <div class="form-control">
+            <label>Date of Birth</label>
+            <input nbInput fullWidth shape="semi-round" [nbDatepicker]="datepicker" formControlName="dateOfBirth" placeholder="Date of birth">
+            <nb-datepicker #datepicker></nb-datepicker>
+          </div>
+        </div>
+
+        <button class="btn" type="submit" [disabled]="form.invalid"(click) = "addUser()" *ngIf="!isEditing; else editing" nbButton shape="semi-round" status="success">Submit</button>
+        <ng-template #editing>
+          <button class="btn" type="submit" (click) = "editUser()" nbButton shape="semi-round" status="success">Edit</button>
+        </ng-template>
+
+      </form>
+      <app-user-card *ngFor="let user of users | paginate: {itemsPerPage: 3, currentPage: p, totalItems: users.length}" [user]="user" (onDelete)="removeCard($event)" (onEdit) ="editCard($event)"></app-user-card>
+      <pagination-controls style="text-align: center;"  previousLabel="Prev" nextLabel="Next" responsive="true" (pageChange)="handlePageChange($event)"> </pagination-controls>
+      
     </div>
-
-    <div class="form-control">
-      <label>Surname</label>
-      <input type="text" placeholder="Surname" formControlName="surname">
-      <div class="validation" *ngIf="form.get('surname').invalid && form.get('surname').touched">
-        <small *ngIf="form.get('surname').errors.required">Surname is required</small>
-        <small *ngIf="form.get('surname').errors.minlength">Min length should be {{ form.get('surname').errors.minlength.requiredLength }} symbols</small>
-      </div>
+    <hr />
+    <div>
+      <ag-grid-angular
+        #myGrid
+        style="width: 1000px; height: 500px;"
+        class="ag-theme-alpine"
+        [columnDefs]="columnDefs"
+        pagination="true"
+        rowSelection='single'
+        rowStyle="background: black"
+      >
+      </ag-grid-angular>
     </div>
-
-    <div class="card" formGroupName="address">
-      <h2>Address</h2>
-      <div class="form-control">
-        <label>Country</label>
-        <select formControlName="country">
-          <option value="ua">Ukraine</option>
-          <option value="us">USA</option>
-          <option value="ca">Canada</option>
-        </select>
-      </div>
-      <div class="form-control">
-        <input type="text" placeholder="City" formControlName="city">
-      </div>
-    </div>
-
-    <button class="btn" type="submit" [disabled]="form.invalid"(click) = "addUser()" *ngIf="!isEditing; else editing">Submit!</button>
-    <ng-template #editing>
-      <button class="btn" type="submit" (click) = "editUser()">Edit!!!!</button>
-    </ng-template>
-
-  </form>
-  <app-user-card *ngFor="let user of users" [user]="user" (onDelete)="removeCard($event)" (onEdit) ="editCard($event)"></app-user-card>
-</div>
+</nb-layout-column>
+</nb-layout>
