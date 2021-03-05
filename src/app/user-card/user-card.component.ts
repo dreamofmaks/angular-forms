@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import User from '../app.component';
+import User from '../user-service';
 
 @Component({
   selector: 'app-user-card',
@@ -9,7 +9,7 @@ import User from '../app.component';
 export class UserCardComponent implements OnInit {
 
   @Input() user: User;
-  @Output() onDelete = new EventEmitter<string>();
+  @Output() onDelete = new EventEmitter<User>();
   @Output() onEdit = new EventEmitter<User>();
 
   constructor() { }
@@ -19,7 +19,7 @@ export class UserCardComponent implements OnInit {
 
 
   deleteCard() {
-    this.onDelete.emit(this.user.name);
+    this.onDelete.emit(this.user);
   }
 
   editCard() {
