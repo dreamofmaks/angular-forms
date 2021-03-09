@@ -5,7 +5,7 @@
   <nb-sidebar>Sidebar Content</nb-sidebar>
   <nb-layout-column>
     <div class="container">
-      <form class="" [formGroup] ="form" (ngSubmit)="Submit()">
+      <form class="" [formGroup] ="form" (ngSubmit)="Submit(form.value)">
         <h1 style="text-align: center;">User Form</h1>
         <div class="form-control">
           <label>Name</label>
@@ -43,22 +43,28 @@
             <input nbInput fullWidth shape="semi-round" [nbDatepicker]="datepicker" formControlName="dateOfBirth" placeholder="Date of birth">
             <nb-datepicker #datepicker></nb-datepicker>
           </div>
+          <div class="form-control">
+            <input type="text" placeholder="Street" formControlName="street" nbInput fullWidth shape="semi-round">
+          </div>
+          <div class="form-control">
+            <input type="text" placeholder="Bulding №" formControlName="building" nbInput fullWidth shape="semi-round">
+          </div>
         </div>
 
         <button class="btn" type="submit" [disabled]="form.invalid"(click) = "addUser()" *ngIf="!isEditing; else editing" nbButton shape="semi-round" status="success">Submit</button>
         <ng-template #editing>
-          <button class="btn" type="submit" (click) = "editUser()" nbButton shape="semi-round" status="success">Edit</button>
+          <button class="btn" type="submit" (click) = "editUser($event)" nbButton shape="semi-round" status="success">Edit</button>
         </ng-template>
 
       </form>
-      <!-- <app-user-card *ngFor="let user of userService.users | paginate: {itemsPerPage: 3, currentPage: p, totalItems: users.length}" [user]="user" (onDelete)="removeCard($event)" (onEdit) ="editCard($event)"></app-user-card> -->
-      <!-- <pagination-controls style="text-align: center;"  previousLabel="Prev" nextLabel="Next" responsive="true" (pageChange)="handlePageChange($event)"> </pagination-controls> -->      
+       <!-- <app-user-card *ngFor="let user of userService.value$ | async" [user]="user" (onDelete)="removeCard($event)" (onEdit) ="editCard($event)"></app-user-card> -->
+     
     </div>
     <hr />
     <div>
       <ag-grid-angular
         #myGrid
-        style="width: 1000px; height: 500px;"
+        style="width: 100%; height: 500px;"
         class="ag-theme-alpine"
         [columnDefs]="columnDefs"
         pagination="true"
@@ -67,9 +73,10 @@
         showToolPanel = "true"
         [frameworkComponents] = "frameworkComponents"
         (gridReady)="onGridReady($event)"
+        (rowDoubleClicked)="getSelectedRows(myGrid)"
+        rowStyle="background: black;"
       >
       </ag-grid-angular>
     </div>
-    <button class="btn" nbButton (click) ="getSelectedRows()">Get Slected row data</button>
 </nb-layout-column>
 </nb-layout>

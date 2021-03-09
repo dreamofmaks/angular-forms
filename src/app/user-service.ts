@@ -2,54 +2,50 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
 export default interface User {
+    id?: number
     name: string,
     surname: string,
     country: string,
     city: string
-    dateOfBirth: Date
+    dateOfBirth: Date,
+    street: string,
+    building: number
   }
 
 @Injectable({providedIn: 'root'})
 export class UserService{
-    private users: User[] = [
-        {name: 'Maks', surname: 'Leontiev', country: 'Ukraine', city: 'Lviv', dateOfBirth: new Date()}
+    private readonly users: User[] = [
+        // {id: 1, name: 'Maks', surname: 'Leontiev', country: 'Ukraine', city: 'Lviv', dateOfBirth: new Date()}
     ];
 
-    private _dataSource = new BehaviorSubject<User[]>(this.users);
+    idCounter = 0;
 
-    public readonly dataSource = this._dataSource.asObservable();
+    private readonly _dataSource = new BehaviorSubject<User[]>(this.users);
 
-    get user() {
-        return this._dataSource.asObservable();
-    }
+    readonly value$ = this._dataSource.asObservable();
 
-    constructor() {
-    }
+    constructor() {}
 
     index: number
     addUser(user: User) {
+        user.id = ++this.idCounter
         this.users.unshift(user);
         this._dataSource.next(this.users);
     }
 
-    detectIndex(user: User) {
-        this.index = this.users.indexOf(user)
-    }
     removeUser(user: User) {
-        this.detectIndex(user);
-        this.users.splice(this.index, 1);
+        const index = this.users.findIndex(u => u.id === user.id);
+        this.users.splice(index, 1);
         this._dataSource.next(this.users);
     }
-    //behaviourSubject
 
-    editUser(editedUser) {
-        if (this.index !== -1) {
-            this.users[this.index] = editedUser;
-        }
-        this._dataSource.next(this.users)
+    editUser(editedUser: User) {
+        const userIndx = this.users.findIndex(user => user.id === editedUser.id);
+        this.users[userIndx] = editedUser;
+        this._dataSource.next(this.users);
     }
 
     getUsers(): User[] {
-        return this._dataSource.getValue();;
+        return this._dataSource.value;
     }
 }

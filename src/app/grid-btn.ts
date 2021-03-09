@@ -38,7 +38,6 @@ import { NbDialogService } from '@nebular/theme';
 
     agInit(params: any): void {
       this.params = params;
-      console.log(this.params);
     }
 
     open(dialog: TemplateRef<any>) {
@@ -46,7 +45,6 @@ import { NbDialogService } from '@nebular/theme';
             const user: User = this.params.data;
             this.userService.removeUser(user)
             this.params.api.setRowData(this.userService.getUsers())
-            console.log(this.userService.getUsers());
         });
       }
 }

@@ -51,6 +51,7 @@ const routes: Routes = [];
     NbDialogModule.forRoot(),
     NbCardModule
   ],
+
   providers: [],
   bootstrap: [AppComponent]
 })
