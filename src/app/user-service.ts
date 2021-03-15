@@ -1,51 +1,96 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
+import { map, switchMap } from 'rxjs/operators';
+import { HttpClient } from "@angular/common/http"
+
+export interface Country {
+    name: string,
+}
+
+export interface City {
+    name: string
+}
+
+export interface Address {
+    id?: number,
+    country: Country,
+    city: City,
+    street: string,
+    building: number
+}
 
 export default interface User {
     id?: number
-    name: string,
-    surname: string,
-    country: string,
-    city: string
+    firstName: string,
+    lastName: string,
     dateOfBirth: Date,
-    street: string,
-    building: number
+    address: Address
+    // country: string,
+    // city: string
+    // street: string,
+    // building: number
   }
 
 @Injectable({providedIn: 'root'})
 export class UserService{
-    private readonly users: User[] = [
-        // {id: 1, name: 'Maks', surname: 'Leontiev', country: 'Ukraine', city: 'Lviv', dateOfBirth: new Date()}
-    ];
+    private users: User[] = [];
 
-    idCounter = 0;
+    idCounter = 10;
 
-    private readonly _dataSource = new BehaviorSubject<User[]>(this.users);
+    readonly fetchedUsers = new BehaviorSubject<User[]>(this.users);
 
-    readonly value$ = this._dataSource.asObservable();
+    constructor(private http: HttpClient) {}
 
-    constructor() {}
+    index: number;
 
-    index: number
-    addUser(user: User) {
+    getRequestUser(): Observable<any> {
+        return this.http.get('https://localhost:44303/api/user').pipe(
+            map(val => {
+                this.users = this.users.concat(val as User);
+                this.fetchedUsers.next(val as User[]);
+            })
+        );
+        
+    }
+    addUser(user: User): Observable<any> {
         user.id = ++this.idCounter
-        this.users.unshift(user);
-        this._dataSource.next(this.users);
+        return this.http.post('https://localhost:44303/api/user', user).pipe(
+            map((val: User) => {
+                this.users = this.users.concat(val as User)
+                this.fetchedUsers.next(this.users);
+            })
+        );
     }
 
-    removeUser(user: User) {
-        const index = this.users.findIndex(u => u.id === user.id);
-        this.users.splice(index, 1);
-        this._dataSource.next(this.users);
+    removeUser(user: User): Observable<any> {
+        return this.http.delete(`https://localhost:44303/api/user/${user.id}`).pipe(
+            map((data) => {
+                this.removeById(this.users, user.id);
+                this.fetchedUsers.next(this.users);
+            })
+        );
     }
 
-    editUser(editedUser: User) {
-        const userIndx = this.users.findIndex(user => user.id === editedUser.id);
-        this.users[userIndx] = editedUser;
-        this._dataSource.next(this.users);
+    editUser(editedUser: User): Observable<any> {
+        // const userIndx = this.users.findIndex(user => user.id === editedUser.id);
+        // this.users[userIndx] = editedUser;
+        // this.fetchedUsers.next(this.users);
+        return this.http.put(`https://localhost:44303/api/user/${editedUser.id}`, editedUser).pipe(
+
+        )
     }
 
-    getUsers(): User[] {
-        return this._dataSource.value;
-    }
+
+
+    removeById(fromItems, id) {
+        const index = fromItems.findIndex((element) => {
+          return element.id === id;
+        });
+        if (index >= 0 ) {
+          fromItems.splice(index, 1);
+        }
+        return fromItems;
+      }
+
 }
+

@@ -26,7 +26,8 @@ export class AppComponent implements OnInit, OnDestroy {
   gridApi: GridApi
   gridColumnApi: ColumnApi;
 
-  sub: Subscription;
+  initSub: Subscription;
+  addingSub: Subscription;
 
   myGridApi: GridApi;
 
@@ -43,12 +44,12 @@ export class AppComponent implements OnInit, OnDestroy {
   menuItems = [{title: 'List'}, {title: 'Empty'}]
 
   columnDefs = [
-    {field: 'name', sortable: true, filter: 'agTextColumnFilter', checkboxSelection: 'true'},
-    {field: 'surname', filter: 'agTextColumnFilter'},
-    {field: 'country'},
-    {field: 'city'},
-    {field: 'street'},
-    {field: 'building'},
+    {field: 'firstName', sortable: true, filter: 'agTextColumnFilter', checkboxSelection: 'true'},
+    {field: 'lastName', filter: 'agTextColumnFilter'},
+    {field: 'address.country.name', headerName: 'Country'},
+    {field: 'address.city.name', headerName: 'City'},
+    {field: 'address.street'},
+    {field: 'address.building'},
     {headerName: 'date of birth',  field: 'dateOfBirth'},
     {
       field: 'Deletion',
@@ -56,8 +57,6 @@ export class AppComponent implements OnInit, OnDestroy {
       minWidth: 150,
     }
   ];
-
-  rowData = this.userService.getUsers();
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -71,14 +70,13 @@ export class AppComponent implements OnInit, OnDestroy {
         building: new FormControl('', [Validators.required])
       })
     });
-    this.sub = this.userService.value$.subscribe(() => {
-      
-    })
+    this.initSub = this.userService.getRequestUser().subscribe(() => {
+      this.myGrid.api.setRowData(this.userService.fetchedUsers.getValue());
+    });
   }
 
   Submit(value) {
     if (this.form.valid) {
-      const formData = { ...value };
       this.form.reset();
       this.gridApi.refreshCells();
     }
@@ -86,66 +84,81 @@ export class AppComponent implements OnInit, OnDestroy {
 
   addUser() {
     const newUser: User = {
-      name: this.form.get('name').value,
-      surname: this.form.get('surname').value,
-      country: this.form.get('address').get('country').value,
-      city: this.form.get('address').get('city').value,
+      firstName: this.form.get('name').value,
+      lastName: this.form.get('surname').value,
       dateOfBirth: this.form.get('address').get('dateOfBirth').value,
-      street: this.form.get('address').get('street').value,
-      building: this.form.get('address').get('building').value
+      address: {
+        city: {
+          name: this.form.get('address').get('city').value
+        },
+        country: {
+          name: this.form.get('address').get('country').value,
+        },
+        street: this.form.get('address').get('street').value,
+        building: this.form.get('address').get('building').value
+      }
+      
     };
-    this.userService.addUser(newUser);
-    this.myGrid.api.setRowData(this.userService.getUsers());
+    this.addingSub = this.userService.addUser(newUser).subscribe(() => {
+      this.myGrid.api.setRowData(this.userService.fetchedUsers.getValue());
+    });
   }
 
   removeCard(user: User) {
     this.userService.removeUser(user);
-    this.gridApi.setRowData(this.userService.getUsers());
+    this.gridApi.setRowData(this.userService.fetchedUsers.getValue());
   }
 
   editCard(user: User) {
+    console.log(user);
     this.isEditing = true;
-    this.form.get('name').setValue(user.name);
-    this.form.get('surname').setValue(user.surname);
-    this.form.get('address').get('country').setValue(user.country);
-    this.form.get('address').get('city').setValue(user.city);
+    this.form.get('name').setValue(user.firstName);
+    this.form.get('surname').setValue(user.lastName);
     this.form.get('address').get('dateOfBirth').setValue(user.dateOfBirth);
-    this.form.get('address').get('street').setValue(user.street);
-    this.form.get('address').get('building').setValue(user.building);
+    this.form.get('address').get('country').setValue(user.address.country.name);
+    this.form.get('address').get('city').setValue(user.address.city.name);
+    this.form.get('address').get('street').setValue(user.address.street);
+    this.form.get('address').get('building').setValue(user.address.building);
   }
 
   editUser() {
     const editedUser: User = {
-      id: this.user.id,
-      name: this.form.get('name').value,
-      surname: this.form.get('surname').value,
-      country: this.form.get('address').get('country').value,
-      city: this.form.get('address').get('city').value,
+      firstName: this.form.get('name').value,
+      lastName: this.form.get('surname').value,
       dateOfBirth: this.form.get('address').get('dateOfBirth').value,
-      street: this.form.get('address').get('street').value,
-      building: this.form.get('address').get('building').value
+      address: {
+        country: {
+          name: this.form.get('address').get('city').value,
+        },
+        city: {
+          name: this.form.get('address').get('country').value,
+        },
+        street: this.form.get('address').get('street').value,
+        building: this.form.get('address').get('building').value
+      } 
     }
-    this.userService.editUser(editedUser);
-    this.isEditing = false;
-    this.myGrid.api.setRowData(this.userService.getUsers());
-    this.form.reset();
-
+    this.userService.editUser(editedUser).subscribe(() => {
+      this.isEditing = false;
+      this.myGrid.api.setRowData(this.userService.fetchedUsers.getValue());
+      this.form.reset();
+    });
   }
 
   getSelectedRows(value) {
     const selectedNodes: RowNode[] = this.myGrid.api.getSelectedNodes();
-    if(selectedNodes.length = 1){
+    if (selectedNodes.length = 1) {
       const selectedData = selectedNodes.forEach(node => {
-        this.user = {...node.data}
+        this.user = { ...node.data }
+        console.log(this.user);
         this.isEditing = !this.isEditing;
-        this.form.get('name').setValue(this.user.name);
-        this.form.get('surname').setValue(this.user.surname);
-        this.form.get('address').get('country').setValue(this.user.country);
-        this.form.get('address').get('city').setValue(this.user.city);
+        this.form.get('name').setValue(this.user.firstName);
+        this.form.get('surname').setValue(this.user.lastName);
         this.form.get('address').get('dateOfBirth').setValue(this.user.dateOfBirth);
-        this.form.get('address').get('street').setValue(this.user.street);
-        this.form.get('address').get('building').setValue(this.user.building)
-        });
+        this.form.get('address').get('country').setValue(this.user.address.country.name);
+        this.form.get('address').get('city').setValue(this.user.address.city.name);
+        this.form.get('address').get('street').setValue(this.user.address.street);
+        this.form.get('address').get('building').setValue(this.user.address.building)
+      });
     } else {
     }
     
@@ -154,11 +167,12 @@ export class AppComponent implements OnInit, OnDestroy {
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
-    this.gridApi.setRowData(this.rowData);
+    this.gridApi.setRowData(this.userService.fetchedUsers.value);
     this.myGridApi = params;
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.initSub.unsubscribe();
+    this.addingSub.unsubscribe();
   }
 }

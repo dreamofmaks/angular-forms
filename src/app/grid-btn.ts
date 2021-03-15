@@ -1,8 +1,9 @@
-import { Component, Injectable, TemplateRef, ViewChild } from "@angular/core";
+import { Component, Injectable, OnDestroy, TemplateRef, ViewChild } from "@angular/core";
 import { NbDialogRef } from "@nebular/theme";
 import { AgGridAngular, ICellRendererAngularComp } from "ag-grid-angular";
 import User, { UserService } from "./user-service";
 import { NbDialogService } from '@nebular/theme';
+import { Subscription } from "rxjs";
 
 
 
@@ -25,7 +26,7 @@ import { NbDialogService } from '@nebular/theme';
     `,
   })
   @Injectable()
-  export class BtnCellRenderer implements ICellRendererAngularComp {
+  export class BtnCellRenderer implements ICellRendererAngularComp, OnDestroy {
       constructor(private userService: UserService, private dialogService: NbDialogService) {}
 
 
@@ -36,16 +37,23 @@ import { NbDialogService } from '@nebular/theme';
 
     isDeleting: boolean = false;
 
+    sub: Subscription
+
     agInit(params: any): void {
       this.params = params;
     }
 
     open(dialog: TemplateRef<any>) {
+      console.log(this.params);
         this.dialogService.open(dialog).onClose.subscribe(() => {
             const user: User = this.params.data;
-            this.userService.removeUser(user)
-            this.params.api.setRowData(this.userService.getUsers())
+            this.sub = this.userService.removeUser(user).subscribe(() => {
+                this.params.api.setRowData(this.userService.fetchedUsers.getValue());
+            })
         });
+      }
+
+      ngOnDestroy() {
       }
 }
 

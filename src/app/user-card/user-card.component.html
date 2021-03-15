@@ -1,8 +1,8 @@
 <div class="card">
-    <p><strong>Name: </strong>{{ user.name }}</p>
-    <p><strong>Surname: </strong>{{ user.surname }}</p>
-    <span><strong>Location: </strong>{{ user.city }}, </span>
-    <span>{{ user.country }}</span>
+    <p><strong>Name: </strong>{{ user.firstName }}</p>
+    <p><strong>Surname: </strong>{{ user.lastName }}</p>
+    <span><strong>Location: </strong>{{ user.address.city }}, </span>
+    <span>{{ user.address.country }}</span>
     <p><strong>Date of birth: </strong>{{ user.dateOfBirth | date: 'longDate'}}</p>
     <br>
     <button class="btn" (click)="deleteCard()" nbButton shape="semi-round" status="danger">Delete Card</button>

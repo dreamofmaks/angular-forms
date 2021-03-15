@@ -22,6 +22,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AgGridModule } from 'ag-grid-angular'
 import { BtnCellRenderer } from './grid-btn';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [];
 
@@ -35,6 +36,7 @@ const routes: Routes = [];
     RouterModule.forRoot(routes),
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     ReactiveFormsModule,
     NgxPaginationModule,
     NbThemeModule.forRoot({ name: 'cosmic' }),
