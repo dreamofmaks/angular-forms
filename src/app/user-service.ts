@@ -1,14 +1,17 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { map, switchMap } from 'rxjs/operators';
-import { HttpClient } from "@angular/common/http"
+import { map, switchMap, tap } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Url } from '../environments/environment';
 
 export interface Country {
+    id?: number,
     name: string,
 }
 
 export interface City {
-    name: string
+    id?: number,
+    name: string,
 }
 
 export interface Address {
@@ -35,17 +38,15 @@ export default interface User {
 export class UserService{
     private users: User[] = [];
 
-    idCounter = 10;
-
     readonly fetchedUsers = new BehaviorSubject<User[]>(this.users);
 
-    constructor(private http: HttpClient) {}
+    constructor(private readonly http: HttpClient) {}
 
     index: number;
 
     getRequestUser(): Observable<any> {
-        return this.http.get('https://localhost:44303/api/user').pipe(
-            map(val => {
+        return this.http.get(Url).pipe(
+            tap(val => {
                 this.users = this.users.concat(val as User);
                 this.fetchedUsers.next(val as User[]);
             })
@@ -53,9 +54,8 @@ export class UserService{
         
     }
     addUser(user: User): Observable<any> {
-        user.id = ++this.idCounter
-        return this.http.post('https://localhost:44303/api/user', user).pipe(
-            map((val: User) => {
+        return this.http.post(Url, user).pipe(
+            tap((val: User) => {
                 this.users = this.users.concat(val as User)
                 this.fetchedUsers.next(this.users);
             })
@@ -63,8 +63,8 @@ export class UserService{
     }
 
     removeUser(user: User): Observable<any> {
-        return this.http.delete(`https://localhost:44303/api/user/${user.id}`).pipe(
-            map((data) => {
+        return this.http.delete(Url + user.id).pipe(
+            tap((data) => {
                 this.removeById(this.users, user.id);
                 this.fetchedUsers.next(this.users);
             })
@@ -75,7 +75,13 @@ export class UserService{
         // const userIndx = this.users.findIndex(user => user.id === editedUser.id);
         // this.users[userIndx] = editedUser;
         // this.fetchedUsers.next(this.users);
-        return this.http.put(`https://localhost:44303/api/user/${editedUser.id}`, editedUser).pipe(
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'applcation/json',
+                'Content-Encoding': 'utf-8'
+            })
+        }
+        return this.http.put(`https://localhost:44303/api/user/${editedUser.id}`, editedUser, httpOptions).pipe(
 
         )
     }

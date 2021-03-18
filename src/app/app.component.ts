@@ -3,9 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AgGridAngular, ICellRendererAngularComp } from 'ag-grid-angular';
 import { ColumnApi, GridApi, RowNode } from 'ag-grid-community';
 import { BtnCellRenderer } from './grid-btn';
-import { UserService } from './user-service';
+import { Country, UserService } from './user-service';
 import User from './user-service';
 import { Subscription } from 'rxjs';
+import { CountryService } from './country-service';
 
 
 
@@ -17,7 +18,7 @@ import { Subscription } from 'rxjs';
 })
 @Injectable()
 export class AppComponent implements OnInit, OnDestroy {
-  constructor(public userService: UserService) {}
+  constructor(public userService: UserService, public CountryService: CountryService) {}
   form: FormGroup;
 
   @ViewChild('myGrid') myGrid: AgGridAngular
@@ -32,6 +33,8 @@ export class AppComponent implements OnInit, OnDestroy {
   myGridApi: GridApi;
 
   user: User;
+
+  countries: Country[];
 
   isEditing: boolean = false;
 
@@ -70,9 +73,19 @@ export class AppComponent implements OnInit, OnDestroy {
         building: new FormControl('', [Validators.required])
       })
     });
-    this.initSub = this.userService.getRequestUser().subscribe(() => {
-      this.myGrid.api.setRowData(this.userService.fetchedUsers.getValue());
+    this.initSub = this.userService.getRequestUser().subscribe((value) => {
+      this.myGrid.api.setRowData(value);
     });
+
+    this.CountryService.getCountries().subscribe((value: Country[]) => {
+      this.countries = value
+      console.log(this.countries);
+    })
+  }
+
+  ngOnDestroy() {
+    this.initSub.unsubscribe();
+    this.addingSub.unsubscribe();
   }
 
   Submit(value) {
@@ -83,6 +96,12 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   addUser() {
+    let currentCountryId;
+    this.countries.forEach((country) => {
+      if(this.form.get('address').get('country').value === country.name) {
+        currentCountryId = country.id
+      }
+    })
     const newUser: User = {
       firstName: this.form.get('name').value,
       lastName: this.form.get('surname').value,
@@ -92,6 +111,7 @@ export class AppComponent implements OnInit, OnDestroy {
           name: this.form.get('address').get('city').value
         },
         country: {
+          id: currentCountryId,
           name: this.form.get('address').get('country').value,
         },
         street: this.form.get('address').get('street').value,
@@ -102,6 +122,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.addingSub = this.userService.addUser(newUser).subscribe(() => {
       this.myGrid.api.setRowData(this.userService.fetchedUsers.getValue());
     });
+    console.log(newUser);
   }
 
   removeCard(user: User) {
@@ -122,7 +143,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   editUser() {
+    console.log(this.myGrid.api);
     const editedUser: User = {
+      id: this.user.id,
       firstName: this.form.get('name').value,
       lastName: this.form.get('surname').value,
       dateOfBirth: this.form.get('address').get('dateOfBirth').value,
@@ -137,6 +160,7 @@ export class AppComponent implements OnInit, OnDestroy {
         building: this.form.get('address').get('building').value
       } 
     }
+    console.log(editedUser);
     this.userService.editUser(editedUser).subscribe(() => {
       this.isEditing = false;
       this.myGrid.api.setRowData(this.userService.fetchedUsers.getValue());
@@ -149,7 +173,6 @@ export class AppComponent implements OnInit, OnDestroy {
     if (selectedNodes.length = 1) {
       const selectedData = selectedNodes.forEach(node => {
         this.user = { ...node.data }
-        console.log(this.user);
         this.isEditing = !this.isEditing;
         this.form.get('name').setValue(this.user.firstName);
         this.form.get('surname').setValue(this.user.lastName);
@@ -169,10 +192,5 @@ export class AppComponent implements OnInit, OnDestroy {
     this.gridColumnApi = params.columnApi;
     this.gridApi.setRowData(this.userService.fetchedUsers.value);
     this.myGridApi = params;
-  }
-
-  ngOnDestroy() {
-    this.initSub.unsubscribe();
-    this.addingSub.unsubscribe();
   }
 }
