@@ -27,6 +27,7 @@ export default interface User {
     firstName: string,
     lastName: string,
     dateOfBirth: Date,
+    addressId?: number,
     address: Address
     // country: string,
     // city: string
@@ -72,17 +73,13 @@ export class UserService{
     }
 
     editUser(editedUser: User): Observable<any> {
-        // const userIndx = this.users.findIndex(user => user.id === editedUser.id);
-        // this.users[userIndx] = editedUser;
-        // this.fetchedUsers.next(this.users);
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'applcation/json',
-                'Content-Encoding': 'utf-8'
-            })
-        }
-        return this.http.put(`https://localhost:44303/api/user/${editedUser.id}`, editedUser, httpOptions).pipe(
 
+        return this.http.put(Url, editedUser).pipe(
+            tap((data: User) => {
+                const userIndx = this.users.findIndex(user => user.id === editedUser.id);
+                this.users[userIndx] = editedUser;
+                this.fetchedUsers.next(this.users);
+            })
         )
     }
 
