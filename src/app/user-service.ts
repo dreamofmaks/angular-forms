@@ -1,39 +1,9 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { map, switchMap, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Url } from '../environments/environment';
-
-export interface Country {
-    id?: number,
-    name: string,
-}
-
-export interface City {
-    id?: number,
-    name: string,
-}
-
-export interface Address {
-    id?: number,
-    country: Country,
-    city: City,
-    street: string,
-    building: number
-}
-
-export default interface User {
-    id?: number
-    firstName: string,
-    lastName: string,
-    dateOfBirth: Date,
-    addressId?: number,
-    address: Address
-    // country: string,
-    // city: string
-    // street: string,
-    // building: number
-  }
+import User from "./models/user-model";
 
 @Injectable({providedIn: 'root'})
 export class UserService{
@@ -54,6 +24,7 @@ export class UserService{
         );
         
     }
+
     addUser(user: User): Observable<any> {
         return this.http.post(Url, user).pipe(
             tap((val: User) => {
@@ -83,8 +54,6 @@ export class UserService{
         )
     }
 
-
-
     removeById(fromItems, id) {
         const index = fromItems.findIndex((element) => {
           return element.id === id;
@@ -94,6 +63,5 @@ export class UserService{
         }
         return fromItems;
       }
-
 }
 

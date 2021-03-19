@@ -1,9 +1,10 @@
 import { Component, Injectable, OnDestroy, TemplateRef, ViewChild } from "@angular/core";
 import { NbDialogRef } from "@nebular/theme";
 import { AgGridAngular, ICellRendererAngularComp } from "ag-grid-angular";
-import User, { UserService } from "./user-service";
 import { NbDialogService } from '@nebular/theme';
 import { Subscription } from "rxjs";
+import { UserService } from './user-service';
+import  User  from './models/user-model';
 
 
 

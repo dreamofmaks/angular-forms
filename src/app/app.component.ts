@@ -3,12 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AgGridAngular, ICellRendererAngularComp } from 'ag-grid-angular';
 import { ColumnApi, GridApi, RowNode } from 'ag-grid-community';
 import { BtnCellRenderer } from './grid-btn';
-import { Country, UserService } from './user-service';
-import User from './user-service';
+import {  UserService } from './user-service';
+import User from './models/user-model';
+import { Country } from './models/country-model';
 import { Subscription } from 'rxjs';
 import { CountryService } from './country-service';
-
-
 
 @Component({
   selector: 'app-root',
@@ -142,38 +141,26 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   editUser() {
-    let currentCountryId;
-    this.countries.forEach((country) => {
-      if(this.form.get('address').get('country').value === country.name) {
-        currentCountryId = country.id
-      }
-    })
-
-    let currentCityId;
-    this.countries.forEach((country) => {
-      if(this.form.get('address').get('city').value === country.name) {
-        currentCityId = country.id
-      }
-    })
     const editedUser: User = {
       id: this.user.id,
       firstName: this.form.get('name').value,
       lastName: this.form.get('surname').value,
       dateOfBirth: this.form.get('address').get('dateOfBirth').value,
+      addressid: this.user.addressid,
       address: {
         country: {
-          id: currentCountryId,
+          id: this.user.address.countryId,
           name: this.form.get('address').get('country').value,
         },
         city: {
-          id: currentCityId,
+          id: this.user.address.cityId,
           name: this.form.get('address').get('city').value,
         },
         street: this.form.get('address').get('street').value,
         building: this.form.get('address').get('building').value
       } 
     }
-    console.log(editedUser);
+    //console.log(editedUser);
     this.userService.editUser(editedUser).subscribe(() => {
       this.isEditing = false;
       this.myGrid.api.setRowData(this.userService.fetchedUsers.getValue());
@@ -182,10 +169,12 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   getSelectedRows(value) {
+    console.log(value);
     const selectedNodes: RowNode[] = this.myGrid.api.getSelectedNodes();
     if (selectedNodes.length = 1) {
       const selectedData = selectedNodes.forEach(node => {
         this.user = { ...node.data }
+        console.log(this.user);
         this.isEditing = !this.isEditing;
         this.form.get('name').setValue(this.user.firstName);
         this.form.get('surname').setValue(this.user.lastName);

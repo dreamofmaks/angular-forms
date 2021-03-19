@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { tap } from 'rxjs/operators';
 import { CountryUrl } from "src/environments/environment";
-import { Country } from './user-service';
+import { Country } from './models/country-model';
 
 @Injectable({providedIn:'root'})
 export class CountryService {
