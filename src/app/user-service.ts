@@ -8,9 +8,7 @@ import User from "./models/user-model";
 @Injectable({providedIn: 'root'})
 export class UserService{
 
-    users: User[] = [];
-
-    readonly fetchedUsers = new BehaviorSubject<User[]>(this.users);
+    readonly fetchedUsers = new BehaviorSubject<User[]>([]);
 
     constructor(private readonly http: HttpClient) {}
 
@@ -25,7 +23,7 @@ export class UserService{
     addUser(user: User): Observable<any> {
         return this.http.post(Url, user).pipe(
             tap((val: User) => {
-                this.fetchedUsers.value.push(val);
+                this.fetchedUsers.next(this.fetchedUsers.value.concat(val));
             })
         );
     }
@@ -33,7 +31,7 @@ export class UserService{
     removeUser(user: User): Observable<any> {
         return this.http.delete(Url + user.id).pipe(
             tap((data) => {
-                this.removeById(this.fetchedUsers.value, user.id);
+                this.fetchedUsers.next(this.removeById(this.fetchedUsers.value, user.id));
             })
         );
     }
@@ -42,7 +40,8 @@ export class UserService{
         return this.http.put(Url, editedUser).pipe(
             tap((data: User) => {
                 const userIndx = this.fetchedUsers.value.findIndex(user => user.id === editedUser.id);
-                this.fetchedUsers.value[userIndx] = editedUser;
+                this.fetchedUsers.value[userIndx] = editedUser; 
+                this.fetchedUsers.next(this.fetchedUsers.value);
             })
         )
     }

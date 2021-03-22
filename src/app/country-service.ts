@@ -8,7 +8,7 @@ import { Country } from './models/country-model';
 @Injectable({providedIn:'root'})
 export class CountryService {
 
-    readonly value$ = new BehaviorSubject<Country[]>(null)
+    readonly value$ = new BehaviorSubject<Country[]>([])
 
     constructor(private readonly http: HttpClient){}
 

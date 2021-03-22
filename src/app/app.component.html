@@ -29,7 +29,7 @@
           <div class="form-control">
             <label>Location</label>
             <nb-select fullWidth shape="semi-round" formControlName="country" placeholder="Country">
-              <nb-option *ngFor="let country of CountryService.value$ | async"[value] ="country.name">{{ country.name }}</nb-option>
+              <nb-option *ngFor="let country of countries$ | async"[value] ="country.name">{{ country.name }}</nb-option>
             </nb-select>
           </div>
           <div class="form-control">

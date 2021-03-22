@@ -17,8 +17,8 @@ import { formatDate } from '@angular/common';
 })
 @Injectable()
 export class AppComponent implements OnInit, OnDestroy {
-  constructor(public userService: UserService,
-              public CountryService: CountryService, 
+  constructor(private userService: UserService,
+              private countryService: CountryService, // countryService
               @Inject(LOCALE_ID) private locale: string) {}
 
   form: FormGroup;
@@ -28,7 +28,8 @@ export class AppComponent implements OnInit, OnDestroy {
   initSub: Subscription;
   addingSub: Subscription;
 
-  user: User;
+  readonly countries$ = this.countryService.value$;
+  currentUser: User;
 
   isEditing: boolean = false;
 
@@ -68,8 +69,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.initSub = this.userService.getAllUsers().subscribe((value) => {
       this.myGrid.api.setRowData(value);
     });
-
-    this.CountryService.getCountries().subscribe();
+    this.countryService.getCountries().subscribe();
   }
 
   ngOnDestroy() {
@@ -86,7 +86,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   addUser() {
     let currentCountryId;
-    this.CountryService.value$.value.forEach((country) => {
+    this.countryService.value$.value.forEach((country) => {
       if(this.form.get('address').get('country').value === country.name) {
         currentCountryId = country.id
       }
@@ -127,18 +127,18 @@ export class AppComponent implements OnInit, OnDestroy {
 
   editUser() {
     const editedUser: User = {
-      id: this.user.id,
+      id: this.currentUser.id,
       firstName: this.form.get('name').value,
       lastName: this.form.get('surname').value,
       dateOfBirth: this.form.get('address').get('dateOfBirth').value,
-      addressid: this.user.addressid,
+      addressid: this.currentUser.addressid,
       address: {
         country: {
-          id: this.user.address.countryId,
+          id: this.currentUser.address.countryId,
           name: this.form.get('address').get('country').value,
         },
         city: {
-          id: this.user.address.cityId,
+          id: this.currentUser.address.cityId,
           name: this.form.get('address').get('city').value,
         },
         street: this.form.get('address').get('street').value,
@@ -154,19 +154,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
   getSelectedUser(value) {
     const selectedNodes: RowNode[] = this.myGrid.api.getSelectedNodes();
-    if (selectedNodes.length = 1) {
-        selectedNodes.forEach(node => {
-        this.user = { ...node.data };
+        const node = selectedNodes[0] 
+        this.currentUser = { ...node.data };
         this.isEditing = !this.isEditing;
-        this.form.get('name').setValue(this.user.firstName);
-        this.form.get('surname').setValue(this.user.lastName);
-        this.form.get('address').get('dateOfBirth').setValue(this.user.dateOfBirth);
-        this.form.get('address').get('country').setValue(this.user.address.country.name);
-        this.form.get('address').get('city').setValue(this.user.address.city.name);
-        this.form.get('address').get('street').setValue(this.user.address.street);
-        this.form.get('address').get('building').setValue(this.user.address.building)
-      });
-    }
+        this.form.get('name').setValue(this.currentUser.firstName);
+        this.form.get('surname').setValue(this.currentUser.lastName);
+        this.form.get('address').get('dateOfBirth').setValue(this.currentUser.dateOfBirth);
+        this.form.get('address').get('country').setValue(this.currentUser.address.country.name);
+        this.form.get('address').get('city').setValue(this.currentUser.address.city.name);
+        this.form.get('address').get('street').setValue(this.currentUser.address.street);
+        this.form.get('address').get('building').setValue(this.currentUser.address.building);
   }
 
   onGridReady(params) {
