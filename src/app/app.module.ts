@@ -17,19 +17,17 @@ import { NbThemeModule,
          NbCardModule } from '@nebular/theme';
 
 import { AppComponent } from './app.component';
-import { UserCardComponent } from './user-card/user-card.component';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AgGridModule } from 'ag-grid-angular'
 import { BtnCellRenderer } from './grid-btn';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [];
 
 @NgModule({
   declarations: [
     AppComponent,
-    UserCardComponent,
     BtnCellRenderer,
   ],
   imports: [

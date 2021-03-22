@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Injectable, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Injectable, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AgGridAngular, ICellRendererAngularComp } from 'ag-grid-angular';
-import { ColumnApi, GridApi, RowNode } from 'ag-grid-community';
+import { AgGridAngular } from 'ag-grid-angular';
+import { RowNode } from 'ag-grid-community';
 import { BtnCellRenderer } from './grid-btn';
 import {  UserService } from './user-service';
 import User from './models/user-model';
-import { Country } from './models/country-model';
 import { Subscription } from 'rxjs';
 import { CountryService } from './country-service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -17,42 +17,35 @@ import { CountryService } from './country-service';
 })
 @Injectable()
 export class AppComponent implements OnInit, OnDestroy {
-  constructor(public userService: UserService, public CountryService: CountryService) {}
+  constructor(public userService: UserService,
+              public CountryService: CountryService, 
+              @Inject(LOCALE_ID) private locale: string) {}
+
   form: FormGroup;
 
   @ViewChild('myGrid') myGrid: AgGridAngular
 
-
-  gridApi: GridApi
-  gridColumnApi: ColumnApi;
-
   initSub: Subscription;
   addingSub: Subscription;
 
-  myGridApi: GridApi;
-
   user: User;
 
-  countries: Country[];
-
   isEditing: boolean = false;
-
 
   frameworkComponents = {
     btnCellRenderer: BtnCellRenderer
   }
 
-
-  menuItems = [{title: 'List'}, {title: 'Empty'}]
-
   columnDefs = [
     {field: 'firstName', sortable: true, filter: 'agTextColumnFilter', checkboxSelection: 'true'},
     {field: 'lastName', filter: 'agTextColumnFilter'},
     {field: 'address.country.name', headerName: 'Country'},
-    {field: 'address.city.name', headerName: 'City'},
-    {field: 'address.street'},
-    {field: 'address.building'},
-    {headerName: 'date of birth',  field: 'dateOfBirth'},
+    {field: 'address.city.name', headerName: 'City',},
+    {field: 'address.street', headerName: 'Street'},
+    {field: 'address.building', headerName: 'building'},
+    {headerName: 'date of birth',  field: 'dateOfBirth', cellRenderer: data => {
+      return formatDate(data.value, 'dd MMM yyyy', this.locale)
+    }},
     {
       field: 'Deletion',
       cellRenderer: 'btnCellRenderer',
@@ -72,13 +65,11 @@ export class AppComponent implements OnInit, OnDestroy {
         building: new FormControl('', [Validators.required])
       })
     });
-    this.initSub = this.userService.getRequestUser().subscribe((value) => {
+    this.initSub = this.userService.getAllUsers().subscribe((value) => {
       this.myGrid.api.setRowData(value);
     });
 
-    this.CountryService.getCountries().subscribe((value: Country[]) => {
-      this.countries = value
-    })
+    this.CountryService.getCountries().subscribe();
   }
 
   ngOnDestroy() {
@@ -89,13 +80,13 @@ export class AppComponent implements OnInit, OnDestroy {
   Submit(value) {
     if (this.form.valid) {
       this.form.reset();
-      this.gridApi.refreshCells();
+      this.myGrid.api.refreshCells();
     }
   }
 
   addUser() {
     let currentCountryId;
-    this.countries.forEach((country) => {
+    this.CountryService.value$.value.forEach((country) => {
       if(this.form.get('address').get('country').value === country.name) {
         currentCountryId = country.id
       }
@@ -118,14 +109,8 @@ export class AppComponent implements OnInit, OnDestroy {
       
     };
     this.addingSub = this.userService.addUser(newUser).subscribe(() => {
-      this.myGrid.api.setRowData(this.userService.fetchedUsers.getValue());
+      this.myGrid.api.setRowData(this.userService.fetchedUsers.value);
     });
-    console.log(newUser);
-  }
-
-  removeCard(user: User) {
-    this.userService.removeUser(user);
-    this.gridApi.setRowData(this.userService.fetchedUsers.getValue());
   }
 
   editCard(user: User) {
@@ -160,21 +145,18 @@ export class AppComponent implements OnInit, OnDestroy {
         building: this.form.get('address').get('building').value
       } 
     }
-    //console.log(editedUser);
-    this.userService.editUser(editedUser).subscribe(() => {
+    this.userService.editUser(editedUser).subscribe((value) => {
       this.isEditing = false;
-      this.myGrid.api.setRowData(this.userService.fetchedUsers.getValue());
+      this.myGrid.api.setRowData(this.userService.fetchedUsers.value);
       this.form.reset();
     });
   }
 
-  getSelectedRows(value) {
-    console.log(value);
+  getSelectedUser(value) {
     const selectedNodes: RowNode[] = this.myGrid.api.getSelectedNodes();
     if (selectedNodes.length = 1) {
-      const selectedData = selectedNodes.forEach(node => {
-        this.user = { ...node.data }
-        console.log(this.user);
+        selectedNodes.forEach(node => {
+        this.user = { ...node.data };
         this.isEditing = !this.isEditing;
         this.form.get('name').setValue(this.user.firstName);
         this.form.get('surname').setValue(this.user.lastName);
@@ -184,15 +166,10 @@ export class AppComponent implements OnInit, OnDestroy {
         this.form.get('address').get('street').setValue(this.user.address.street);
         this.form.get('address').get('building').setValue(this.user.address.building)
       });
-    } else {
     }
-    
   }
 
   onGridReady(params) {
-    this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
-    this.gridApi.setRowData(this.userService.fetchedUsers.value);
-    this.myGridApi = params;
+    this.myGrid.api.setRowData(this.userService.fetchedUsers.value);
   }
 }

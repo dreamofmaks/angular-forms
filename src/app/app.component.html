@@ -1,6 +1,5 @@
 <nb-layout>
   <nb-layout-header fixed>
-    <button [nbContextMenu]="menuItems" nbButton nbContextMenuPlacement="right">Menu</button>
   </nb-layout-header>
   <nb-sidebar>Sidebar Content</nb-sidebar>
   <nb-layout-column>
@@ -30,22 +29,22 @@
           <div class="form-control">
             <label>Location</label>
             <nb-select fullWidth shape="semi-round" formControlName="country" placeholder="Country">
-              <nb-option *ngFor="let country of countries"[value] ="country.name">{{ country.name }}</nb-option>
+              <nb-option *ngFor="let country of CountryService.value$ | async"[value] ="country.name">{{ country.name }}</nb-option>
             </nb-select>
           </div>
           <div class="form-control">
             <input type="text" placeholder="City" formControlName="city" nbInput fullWidth shape="semi-round">
           </div>
           <div class="form-control">
-            <label>Date of Birth</label>
-            <input nbInput fullWidth shape="semi-round" [nbDatepicker]="datepicker" formControlName="dateOfBirth" placeholder="Date of birth">
-            <nb-datepicker #datepicker></nb-datepicker>
-          </div>
-          <div class="form-control">
             <input type="text" placeholder="Street" formControlName="street" nbInput fullWidth shape="semi-round">
           </div>
           <div class="form-control">
             <input type="text" placeholder="Bulding №" formControlName="building" nbInput fullWidth shape="semi-round">
+          </div>
+          <div class="form-control">
+            <label>Date of Birth</label>
+            <input nbInput fullWidth shape="semi-round" [nbDatepicker]="datepicker" formControlName="dateOfBirth" placeholder="Date of birth">
+            <nb-datepicker #datepicker></nb-datepicker>
           </div>
         </div>
 
@@ -54,9 +53,7 @@
           <button class="btn" type="submit" (click) = "editUser($event)" nbButton shape="semi-round" status="success">Edit</button>
         </ng-template>
 
-      </form>
-       <!-- <app-user-card *ngFor="let user of userService.value$ | async" [user]="user" (onDelete)="removeCard($event)" (onEdit) ="editCard($event)"></app-user-card> -->
-     
+      </form>    
     </div>
     <hr />
     <div>
@@ -71,8 +68,7 @@
         showToolPanel = "true"
         [frameworkComponents] = "frameworkComponents"
         (gridReady)="onGridReady($event)"
-        (rowDoubleClicked)="getSelectedRows(myGrid)"
-        rowStyle="background: black;"
+        (rowDoubleClicked)="getSelectedUser(myGrid)"
       >
       </ag-grid-angular>
     </div>

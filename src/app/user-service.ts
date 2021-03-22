@@ -7,29 +7,25 @@ import User from "./models/user-model";
 
 @Injectable({providedIn: 'root'})
 export class UserService{
-    private users: User[] = [];
+
+    users: User[] = [];
 
     readonly fetchedUsers = new BehaviorSubject<User[]>(this.users);
 
     constructor(private readonly http: HttpClient) {}
 
-    index: number;
-
-    getRequestUser(): Observable<any> {
+    getAllUsers(): Observable<any> {
         return this.http.get(Url).pipe(
             tap(val => {
-                this.users = this.users.concat(val as User);
-                this.fetchedUsers.next(val as User[]);
+                this.fetchedUsers.next(val);
             })
         );
-        
     }
 
     addUser(user: User): Observable<any> {
         return this.http.post(Url, user).pipe(
             tap((val: User) => {
-                this.users = this.users.concat(val as User)
-                this.fetchedUsers.next(this.users);
+                this.fetchedUsers.value.push(val);
             })
         );
     }
@@ -37,31 +33,28 @@ export class UserService{
     removeUser(user: User): Observable<any> {
         return this.http.delete(Url + user.id).pipe(
             tap((data) => {
-                this.removeById(this.users, user.id);
-                this.fetchedUsers.next(this.users);
+                this.removeById(this.fetchedUsers.value, user.id);
             })
         );
     }
 
     editUser(editedUser: User): Observable<any> {
-
         return this.http.put(Url, editedUser).pipe(
             tap((data: User) => {
-                const userIndx = this.users.findIndex(user => user.id === editedUser.id);
-                this.users[userIndx] = editedUser;
-                this.fetchedUsers.next(this.users);
+                const userIndx = this.fetchedUsers.value.findIndex(user => user.id === editedUser.id);
+                this.fetchedUsers.value[userIndx] = editedUser;
             })
         )
     }
 
     removeById(fromItems, id) {
         const index = fromItems.findIndex((element) => {
-          return element.id === id;
+            return element.id === id;
         });
-        if (index >= 0 ) {
-          fromItems.splice(index, 1);
+        if (index >= 0) {
+            fromItems.splice(index, 1);
         }
         return fromItems;
-      }
+    }
 }
 
