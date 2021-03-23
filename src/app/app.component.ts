@@ -17,8 +17,8 @@ import { formatDate } from '@angular/common';
 })
 @Injectable()
 export class AppComponent implements OnInit, OnDestroy {
-  constructor(private userService: UserService,
-              private countryService: CountryService, // countryService
+  constructor(private readonly userService: UserService,
+              private readonly countryService: CountryService,
               @Inject(LOCALE_ID) private locale: string) {}
 
   form: FormGroup;
@@ -28,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
   initSub: Subscription;
   addingSub: Subscription;
 
-  readonly countries$ = this.countryService.value$;
+  readonly countries$ = this.countryService.getCountries();
   currentUser: User;
 
   isEditing: boolean = false;
@@ -69,7 +69,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.initSub = this.userService.getAllUsers().subscribe((value) => {
       this.myGrid.api.setRowData(value);
     });
-    this.countryService.getCountries().subscribe();
   }
 
   ngOnDestroy() {

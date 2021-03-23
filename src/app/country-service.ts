@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { CountryUrl } from "src/environments/environment";
 import { Country } from './models/country-model';
 
@@ -16,7 +16,8 @@ export class CountryService {
         return this.http.get(CountryUrl).pipe(
            tap((value: Country[]) => {
                this.value$.next(value)
-           })
+           }),
+           switchMap(() => this.value$.asObservable())
         )
     }
 }
