@@ -47,11 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
     {headerName: 'date of birth',  field: 'dateOfBirth', cellRenderer: data => {
       return formatDate(data.value, 'dd MMM yyyy', this.locale)
     }},
-    {
-      field: 'Deletion',
-      cellRenderer: 'btnCellRenderer',
-      minWidth: 150,
-    }
+    {field: 'Deletion', cellRenderer: 'btnCellRenderer', minWidth: 150}
   ];
 
   ngOnInit() {

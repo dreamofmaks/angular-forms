@@ -5,9 +5,6 @@ import { Subscription } from "rxjs";
 import { UserService } from './user-service';
 import  User  from './models/user-model';
 
-
-
-
 @Component({
     selector: 'btn-cell-renderer',
     template: `
