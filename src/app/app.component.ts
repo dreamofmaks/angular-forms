@@ -84,6 +84,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   addUser() {
+    console.log(this.countryService.value$.value);
     let currentCountryId;
     this.countryService.value$.value.forEach((country) => {
       if(this.form.get('address').get('country').value === country.name) {
@@ -105,7 +106,6 @@ export class AppComponent implements OnInit, OnDestroy {
         street: this.form.get('address').get('street').value,
         building: this.form.get('address').get('building').value
       }
-      
     };
     this.addingSub = this.userService.addUser(newUser).subscribe(() => {
       this.myGrid.api.setRowData(this.userService.fetchedUsers.value);
@@ -113,15 +113,15 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   editCard(user: User) {
-    console.log(user);
     this.isEditing = true;
-    this.form.get('name').setValue(user.firstName);
-    this.form.get('surname').setValue(user.lastName);
-    this.form.get('address').get('dateOfBirth').setValue(user.dateOfBirth);
-    this.form.get('address').get('country').setValue(user.address.country.name);
-    this.form.get('address').get('city').setValue(user.address.city.name);
-    this.form.get('address').get('street').setValue(user.address.street);
-    this.form.get('address').get('building').setValue(user.address.building);
+    this.form.patchValue({
+      name: user.firstName,
+      surname: user.lastName,
+      country: user.address.country,
+      city: user.address.country,
+      building: user.address.building,
+      street: user.address.street
+    });   
   }
 
   editUser() {
@@ -156,13 +156,17 @@ export class AppComponent implements OnInit, OnDestroy {
         const node = selectedNodes[0] 
         this.currentUser = { ...node.data };
         this.isEditing = !this.isEditing;
-        this.form.get('name').setValue(this.currentUser.firstName);
-        this.form.get('surname').setValue(this.currentUser.lastName);
-        this.form.get('address').get('dateOfBirth').setValue(this.currentUser.dateOfBirth);
-        this.form.get('address').get('country').setValue(this.currentUser.address.country.name);
-        this.form.get('address').get('city').setValue(this.currentUser.address.city.name);
-        this.form.get('address').get('street').setValue(this.currentUser.address.street);
-        this.form.get('address').get('building').setValue(this.currentUser.address.building);
+        this.form.patchValue({
+          name: this.currentUser.firstName,
+          surname: this.currentUser.lastName,
+          address: {
+            country: this.currentUser.address.country.name,
+            city: this.currentUser.address.city.name,
+            building: this.currentUser.address.building,
+            street: this.currentUser.address.street,
+            dateOfBirth: this.currentUser.dateOfBirth
+          } 
+        });
   }
 
   onGridReady(params) {
