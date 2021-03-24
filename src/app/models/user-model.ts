@@ -5,6 +5,6 @@ export default interface User {
     firstName: string,
     lastName: string,
     dateOfBirth: Date,
-    addressid?: number,
+    addressId?: number,
     address: Address
   }

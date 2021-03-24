@@ -80,7 +80,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   addUser() {
-    console.log(this.countryService.value$.value);
     let currentCountryId;
     this.countryService.value$.value.forEach((country) => {
       if(this.form.get('address').get('country').value === country.name) {
@@ -121,15 +120,21 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   editUser() {
+    let editedCountryId: number;
+    this.countryService.value$.value.forEach((country) => {
+      if(this.form.get('address').get('country').value === country.name){
+        editedCountryId = country.id;
+      }
+    })
     const editedUser: User = {
       id: this.currentUser.id,
       firstName: this.form.get('name').value,
       lastName: this.form.get('surname').value,
       dateOfBirth: this.form.get('address').get('dateOfBirth').value,
-      addressid: this.currentUser.addressid,
+      addressId: this.currentUser.addressId,
       address: {
         country: {
-          id: this.currentUser.address.countryId,
+          id: editedCountryId,
           name: this.form.get('address').get('country').value,
         },
         city: {
@@ -140,6 +145,7 @@ export class AppComponent implements OnInit, OnDestroy {
         building: this.form.get('address').get('building').value
       } 
     }
+    console.log(editedUser);
     this.userService.editUser(editedUser).subscribe((value) => {
       this.isEditing = false;
       this.myGrid.api.setRowData(this.userService.fetchedUsers.value);
@@ -158,7 +164,7 @@ export class AppComponent implements OnInit, OnDestroy {
           address: {
             country: this.currentUser.address.country.name,
             city: this.currentUser.address.city.name,
-            building: this.currentUser.address.building,
+             building: this.currentUser.address.building,
             street: this.currentUser.address.street,
             dateOfBirth: this.currentUser.dateOfBirth
           } 
