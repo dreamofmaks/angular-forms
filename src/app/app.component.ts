@@ -145,7 +145,6 @@ export class AppComponent implements OnInit, OnDestroy {
         building: this.form.get('address').get('building').value
       } 
     }
-    console.log(editedUser);
     this.userService.editUser(editedUser).subscribe((value) => {
       this.isEditing = false;
       this.myGrid.api.setRowData(this.userService.fetchedUsers.value);
