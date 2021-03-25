@@ -18,8 +18,7 @@ import { formatDate } from '@angular/common';
 @Injectable()
 export class AppComponent implements OnInit, OnDestroy {
   constructor(private readonly userService: UserService,
-              private readonly countryService: CountryService,
-              @Inject(LOCALE_ID) private locale: string) {}
+              private readonly countryService: CountryService) {}
 
   form: FormGroup;
 
@@ -44,9 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
     {field: 'address.city.name', headerName: 'City',},
     {field: 'address.street', headerName: 'Street'},
     {field: 'address.building', headerName: 'building'},
-    {headerName: 'date of birth',  field: 'dateOfBirth', cellRenderer: data => {
-      return formatDate(data.value, 'dd MMM yyyy', this.locale)
-    }},
+    {headerName: 'date of birth',  field: 'dateOfBirth'},
     {field: 'Deletion', cellRenderer: 'btnCellRenderer', minWidth: 150}
   ];
 
@@ -115,7 +112,8 @@ export class AppComponent implements OnInit, OnDestroy {
       country: user.address.country,
       city: user.address.country,
       building: user.address.building,
-      street: user.address.street
+      street: user.address.street,
+      dateOfBirth: user.dateOfBirth
     });   
   }
 
@@ -156,6 +154,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const selectedNodes: RowNode[] = this.myGrid.api.getSelectedNodes();
         const node = selectedNodes[0] 
         this.currentUser = { ...node.data };
+        console.log(this.currentUser);
         this.isEditing = !this.isEditing;
         this.form.patchValue({
           name: this.currentUser.firstName,
@@ -165,8 +164,9 @@ export class AppComponent implements OnInit, OnDestroy {
             city: this.currentUser.address.city.name,
              building: this.currentUser.address.building,
             street: this.currentUser.address.street,
-            dateOfBirth: this.currentUser.dateOfBirth
+            dateOfBirth: new Date(this.currentUser.dateOfBirth)
           } 
+          
         });
   }
 
