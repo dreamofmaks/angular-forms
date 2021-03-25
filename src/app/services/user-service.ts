@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Url } from '../environments/environment';
-import User from "./models/user-model";
+import { Url } from '../../environments/environment';
+import User from "../models/user-model";
 
 @Injectable({providedIn: 'root'})
 export class UserService{

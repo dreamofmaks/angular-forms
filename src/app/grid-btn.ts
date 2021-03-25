@@ -2,7 +2,7 @@ import { Component, Injectable, OnDestroy, TemplateRef, ViewChild } from "@angul
 import { ICellRendererAngularComp } from "ag-grid-angular";
 import { NbDialogService } from '@nebular/theme';
 import { Subscription } from "rxjs";
-import { UserService } from './user-service';
+import { UserService } from './services/user-service';
 import  User  from './models/user-model';
 
 @Component({

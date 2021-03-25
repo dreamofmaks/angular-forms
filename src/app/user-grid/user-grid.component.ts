@@ -5,7 +5,7 @@ import { RowNode } from 'ag-grid-community';
 import { Subscription } from 'rxjs';
 import { BtnCellRenderer } from '../grid-btn';
 import User from '../models/user-model';
-import { UserService } from '../user-service'
+import { UserService } from '../services/user-service'
 
 @Component({
   selector: 'app-user-grid',
