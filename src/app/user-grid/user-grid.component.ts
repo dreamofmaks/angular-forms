@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { RowNode } from 'ag-grid-community';
 import { Subscription } from 'rxjs';
-import { BtnCellRenderer } from '../grid-btn';
+import { BtnCellRenderer } from './grid-btn';
 import User from '../models/user-model';
 import { UserService } from '../services/user-service'
 

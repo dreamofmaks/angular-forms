@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject, Injectable, LOCALE_ID, OnDe
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AgGridAngular } from 'ag-grid-angular';
 import { RowNode } from 'ag-grid-community';
-import { BtnCellRenderer } from './grid-btn';
+import { BtnCellRenderer } from './user-grid/grid-btn';
 import {  UserService } from './services/user-service';
 import User from './models/user-model';
 import { Subscription } from 'rxjs';

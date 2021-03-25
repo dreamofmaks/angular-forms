@@ -20,7 +20,7 @@ import { AppComponent } from './app.component';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AgGridModule } from 'ag-grid-angular'
-import { BtnCellRenderer } from './grid-btn';
+import { BtnCellRenderer } from './user-grid/grid-btn';
 import { HttpClientModule } from '@angular/common/http';
 import { UserGridComponent } from './user-grid/user-grid.component';
 import { FormComponent } from './form/form.component';
