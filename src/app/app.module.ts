@@ -22,13 +22,20 @@ import { Routes, RouterModule } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular'
 import { BtnCellRenderer } from './grid-btn';
 import { HttpClientModule } from '@angular/common/http';
+import { UserGridComponent } from './user-grid/user-grid.component';
+import { FormComponent } from './form/form.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {path: '', component: UserGridComponent, pathMatch: 'full'},
+  {path: 'userform', component: FormComponent}
+];
 
 @NgModule({
   declarations: [
     AppComponent,
     BtnCellRenderer,
+    UserGridComponent,
+    FormComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -49,7 +56,7 @@ const routes: Routes = [];
     NbContextMenuModule,
     AgGridModule.withComponents([BtnCellRenderer]),
     NbDialogModule.forRoot(),
-    NbCardModule
+    NbCardModule,
   ],
 
   providers: [],

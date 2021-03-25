@@ -1,76 +1,11 @@
 <nb-layout>
   <nb-layout-header fixed>
+    <button outline nbButton [nbContextMenu]="items">
+      Show Menu
+    </button>
   </nb-layout-header>
-  <nb-sidebar>Sidebar Content</nb-sidebar>
+  <nb-sidebar>Sidebar content</nb-sidebar>
   <nb-layout-column>
-    <div class="container">
-      <form class="" [formGroup] ="form" (ngSubmit)="Submit(form.value)">
-        <h1 style="text-align: center;">User Form</h1>
-        <div class="form-control">
-          <label>Name</label>
-          <input type="text" placeholder="Name" formControlName="name" nbInput fullWidth shape="semi-round">
-          <div class="validation" *ngIf="form.get('name').invalid && form.get('name').touched">
-            <small *ngIf="form.get('name').errors.required">Name is required</small>
-            <small *ngIf="form.get('name').errors.minlength">Min length should be {{ form.get('name').errors.minlength.requiredLength }} symbols</small>
-          </div>
-        </div>
-
-        <div class="form-control">
-          <label>Surname</label>
-          <input type="text" placeholder="Surname" formControlName="surname" nbInput fullWidth shape="semi-round">
-          <div class="validation" *ngIf="form.get('surname').invalid && form.get('surname').touched">
-            <small *ngIf="form.get('surname').errors.required">Surname is required</small>
-            <small *ngIf="form.get('surname').errors.minlength">Min length should be {{ form.get('surname').errors.minlength.requiredLength }} symbols</small>
-          </div>
-        </div>
-
-        <div class="card" formGroupName="address">
-          <h2>Additional Information</h2>
-          <div class="form-control">
-            <label>Location</label>
-            <nb-select fullWidth shape="semi-round" formControlName="country" placeholder="Country">
-              <nb-option *ngFor="let country of countries$ | async" [value] ="country.name">{{ country.name }}</nb-option>
-            </nb-select>
-          </div>
-          <div class="form-control">
-            <input type="text" placeholder="City" formControlName="city" nbInput fullWidth shape="semi-round">
-          </div>
-          <div class="form-control">
-            <input type="text" placeholder="Street" formControlName="street" nbInput fullWidth shape="semi-round">
-          </div>
-          <div class="form-control">
-            <input type="text" placeholder="Bulding №" formControlName="building" nbInput fullWidth shape="semi-round">
-          </div>
-          <div class="form-control">
-            <label>Date of Birth</label>
-            <input nbInput fullWidth shape="semi-round" [nbDatepicker]="datepicker" formControlName="dateOfBirth" placeholder="Date of birth">
-            <nb-datepicker #datepicker></nb-datepicker>
-          </div>
-        </div>
-
-        <button class="btn" type="submit" [disabled]="form.invalid"(click) = "addUser()" *ngIf="!isEditing; else editing" nbButton shape="semi-round" status="success">Submit</button>
-        <ng-template #editing>
-          <button class="btn" type="submit" (click) = "editUser($event)" nbButton shape="semi-round" status="success">Edit</button>
-        </ng-template>
-
-      </form>    
-    </div>
-    <hr />
-    <div>
-      <ag-grid-angular
-        #myGrid
-        style="width: 100%; height: 500px;"
-        class="ag-theme-alpine"
-        [columnDefs]="columnDefs"
-        pagination="true"
-        rowSelection='single'
-        suppressCopyRowsToClipboard='true'
-        showToolPanel = "true"
-        [frameworkComponents] = "frameworkComponents"
-        (gridReady)="onGridReady($event)"
-        (rowDoubleClicked)="getSelectedUser(myGrid)"
-      >
-      </ag-grid-angular>
-    </div>
-</nb-layout-column>
+    <router-outlet></router-outlet>
+  </nb-layout-column>
 </nb-layout>

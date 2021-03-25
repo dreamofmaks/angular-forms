@@ -1,0 +1,20 @@
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@ag-grid-community/all-modules@25.1.0/dist/styles/ag-theme-balham.css" />
+
+<div class="ag-theme-balham">
+    <ag-grid-angular
+      #myGrid
+      style="width: 100%; height: 500px;"
+      class="ag-theme-alpine"
+      [columnDefs]="columnDefs"
+      pagination="true"
+      rowSelection='single'
+      suppressCopyRowsToClipboard='true'
+      showToolPanel = "true"
+      [frameworkComponents] = "frameworkComponents"
+      (gridReady)="onGridReady($event)"
+      (rowDoubleClicked)="getSelectedUser(myGrid)"
+    >
+    </ag-grid-angular>
+  </div>

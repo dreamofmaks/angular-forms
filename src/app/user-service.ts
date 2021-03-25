@@ -9,6 +9,7 @@ import User from "./models/user-model";
 export class UserService{
 
     readonly fetchedUsers = new BehaviorSubject<User[]>([]);
+    readonly currentUser$ = new BehaviorSubject<User>(null)
 
     constructor(private readonly http: HttpClient) {}
 
@@ -18,6 +19,14 @@ export class UserService{
                 this.fetchedUsers.next(val);
             })
         );
+    }
+
+    getUserById(id: number) : Observable<any> {
+        return this.http.get(Url + id).pipe(
+            tap((val: User) => {
+                this.currentUser$.next(val);
+            })
+        )
     }
 
     addUser(user: User): Observable<any> {
