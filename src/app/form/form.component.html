@@ -20,6 +20,21 @@
                     form.get('surname').errors.minlength.requiredLength }} symbols</small>
             </div>
         </div>
+        <div>
+            <label>Email</label>
+            <input type="text" placeholder="Email" formControlName="email" nbInput fullWidth shape="semi-round">
+            <div class="validation" *ngIf="form.get('email').invalid && form.get('email').touched ">
+                <small *ngIf="form.get('email').errors.required">Email is required</small>
+            </div>
+        </div>
+
+        <div>
+            <label>Password</label>
+            <input type="password" placeholder="Password" formControlName="password" nbInput fullWidth shape="semi-round">
+            <div class="validation" *ngIf="form.get('password').invalid && form.get('password').touched ">
+                <small *ngIf="form.get('password').errors.required">Email is required</small>
+            </div>
+        </div>
 
         <div class="card" formGroupName="address">
             <h2>Additional Information</h2>

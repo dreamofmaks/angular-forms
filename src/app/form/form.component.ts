@@ -35,6 +35,8 @@ export class FormComponent implements OnInit {
     this.form = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.minLength(4)]),
       surname: new FormControl('', [Validators.required, Validators.minLength(4)]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', Validators.required),
       address: new FormGroup({
         country: new FormControl('ua'),
         city: new FormControl('', Validators.required),
@@ -43,8 +45,11 @@ export class FormComponent implements OnInit {
         building: new FormControl('', [Validators.required])
       })
     });
+
       this.route.queryParams.subscribe((params) => {
-        this.getUser(+params.id);
+        if(params.id !== undefined){
+          this.getUser(Number.parseInt(params.id));
+        }
       })
   }
 
@@ -65,6 +70,8 @@ export class FormComponent implements OnInit {
       firstName: this.form.get('name').value,
       lastName: this.form.get('surname').value,
       dateOfBirth: this.form.get('address').get('dateOfBirth').value,
+      email: this.form.get('email').value,
+      password: this.form.get('password').value,
       address: {
         city: {
           name: this.form.get('address').get('city').value
@@ -78,7 +85,7 @@ export class FormComponent implements OnInit {
       }
     };
     this.addingSub = this.userService.addUser(newUser).subscribe(() => {
-      this.router.navigate(['']);
+      this.router.navigate(['home']);
     });
   }
 
@@ -125,7 +132,7 @@ export class FormComponent implements OnInit {
         } 
       }
       this.userService.editUser(editedUser).subscribe(() => {
-        this.router.navigate(['']);
+        this.router.navigate(['home']);
       });
     }
 }

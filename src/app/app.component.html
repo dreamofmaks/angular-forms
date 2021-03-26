@@ -3,6 +3,7 @@
     <button outline nbButton [nbContextMenu]="items">
       Show Menu
     </button>
+    <button class="btn" nbButton shape="semi-round" (click) = "logOut()" *ngIf="isLoggedIn">Log out</button>
   </nb-layout-header>
   <nb-sidebar>Sidebar content</nb-sidebar>
   <nb-layout-column>

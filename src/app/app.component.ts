@@ -1,15 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, Injectable, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AgGridAngular } from 'ag-grid-angular';
-import { RowNode } from 'ag-grid-community';
-import { BtnCellRenderer } from './user-grid/grid-btn';
 import {  UserService } from './services/user-service';
-import User from './models/user-model';
-import { Subscription } from 'rxjs';
 import { CountryService } from './services/country-service';
-import { formatDate } from '@angular/common';
 import { NbMenuService } from '@nebular/theme';
 import { Router } from '@angular/router';
+import { AuthService } from './services/auth-service';
 
 @Component({
   selector: 'app-root',
@@ -18,25 +12,25 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 @Injectable()
-export class AppComponent implements OnInit, OnDestroy {
-  constructor(private readonly userService: UserService,
-    private readonly countryService: CountryService,
-    private readonly menuService: NbMenuService,
-    private readonly router: Router) {
-      menuService.onItemClick().subscribe((val) => {
+export class AppComponent {
+  constructor(private readonly menuService: NbMenuService,
+              private readonly router: Router,
+              private readonly authService: AuthService) {
+      this.menuService.onItemClick().subscribe((val) => {
         this.router.navigate([val.item.link])
       })
   }
   items = [
-    {title: 'Home', link: ''},
+    {title: 'Home', link: 'home'},
     {title: 'Form', link: 'userform'}
   ];
 
-
-
-  ngOnInit() {
+  public get isLoggedIn() {
+    return this.authService.isAuthenticated();
   }
 
-  ngOnDestroy() {
+  logOut() {
+    this.authService.logOut();
+    this.router.navigate(['']);
   }
 }

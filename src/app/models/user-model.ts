@@ -6,5 +6,8 @@ export default interface User {
     lastName: string,
     dateOfBirth: Date,
     addressId?: number,
+    email?: string,
+    password?: string,
+    token?: string,
     address: Address
   }

@@ -42,7 +42,6 @@ export class UserGridComponent implements OnInit {
   ];
 
   ngOnInit() {
-    // this.date.
     this.initSub = this.userService.getAllUsers().subscribe((value) => {
       this.myGrid.api.setRowData(value);
     });

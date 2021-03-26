@@ -24,10 +24,14 @@ import { BtnCellRenderer } from './user-grid/grid-btn';
 import { HttpClientModule } from '@angular/common/http';
 import { UserGridComponent } from './user-grid/user-grid.component';
 import { FormComponent } from './form/form.component';
+import { HomeComponent } from './home/home.component';
+import { JwtModule } from '@auth0/angular-jwt';
+import { AuthGuard } from './guards/auth-guard';
 
 const routes: Routes = [
-  {path: '', component: UserGridComponent, pathMatch: 'full'},
-  {path: 'userform', component: FormComponent}
+  {path: '', component: HomeComponent, pathMatch: 'full'},
+  {path: 'home', component: UserGridComponent, canActivate: [AuthGuard]},
+  {path: 'userform', component: FormComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
@@ -36,6 +40,7 @@ const routes: Routes = [
     BtnCellRenderer,
     UserGridComponent,
     FormComponent,
+    HomeComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -57,8 +62,16 @@ const routes: Routes = [
     AgGridModule.withComponents([BtnCellRenderer]),
     NbDialogModule.forRoot(),
     NbCardModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => {
+          return localStorage.getItem("JWT");
+        },
+        allowedDomains: ["localhost:44303"],
+        disallowedRoutes: ["localhost:44303/api/auth"]
+      }
+    })
   ],
-
   providers: [],
   bootstrap: [AppComponent]
 })
