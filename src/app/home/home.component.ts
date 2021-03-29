@@ -20,4 +20,8 @@ export class HomeComponent implements OnInit {
     },
     (err) => alert("Wrong email or password!"))
   }
+
+  signUp() {
+    this.router.navigate(['userform']);
+  }
 }

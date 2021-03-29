@@ -31,9 +31,6 @@
         <div>
             <label>Password</label>
             <input type="password" placeholder="Password" formControlName="password" nbInput fullWidth shape="semi-round">
-            <div class="validation" *ngIf="form.get('password').invalid && form.get('password').touched ">
-                <small *ngIf="form.get('password').errors.required">Email is required</small>
-            </div>
         </div>
 
         <div class="card" formGroupName="address">

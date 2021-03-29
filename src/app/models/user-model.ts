@@ -1,4 +1,5 @@
 import { Address } from '../models/address-model';
+import { Password } from '../models/password-model';
 
 export default interface User {
     id?: number
@@ -7,7 +8,7 @@ export default interface User {
     dateOfBirth: Date,
     addressId?: number,
     email?: string,
-    password?: string,
+    password?: Password
     token?: string,
     address: Address
   }

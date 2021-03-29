@@ -36,7 +36,7 @@ export class FormComponent implements OnInit {
       name: new FormControl('', [Validators.required, Validators.minLength(4)]),
       surname: new FormControl('', [Validators.required, Validators.minLength(4)]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', Validators.required),
+      password: new FormControl('', []),
       address: new FormGroup({
         country: new FormControl('ua'),
         city: new FormControl('', Validators.required),
@@ -71,7 +71,9 @@ export class FormComponent implements OnInit {
       lastName: this.form.get('surname').value,
       dateOfBirth: this.form.get('address').get('dateOfBirth').value,
       email: this.form.get('email').value,
-      password: this.form.get('password').value,
+      password: {
+        password1: this.form.get('password').value,
+      },
       address: {
         city: {
           name: this.form.get('address').get('city').value
