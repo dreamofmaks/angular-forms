@@ -4,6 +4,7 @@
       Show Menu
     </button>
     <button class="btn" nbButton shape="semi-round" (click) = "logOut()" *ngIf="isLoggedIn">Log out</button>
+    <button nbButton class="btn" shape="semi-round" (click) = "signUp()" *ngIf="!isLoggedIn">Sign UP</button>
   </nb-layout-header>
   <nb-sidebar>Sidebar content</nb-sidebar>
   <nb-layout-column>

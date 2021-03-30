@@ -33,4 +33,8 @@ export class AppComponent {
     this.authService.logOut();
     this.router.navigate(['']);
   }
+
+  signUp() {
+    this.router.navigate(['login']);
+  }
 }

@@ -1,5 +1,5 @@
 <div class="container">
-    <form class="" [formGroup]="form" (ngSubmit)="Submit(form.value)">
+    <ng-container class="" [formGroup]="form" (ngSubmit)="Submit(form.value)">
         <h1 style="text-align: center;">User Form</h1>
         <div class="form-control">
             <label>Name</label>
@@ -19,18 +19,6 @@
                 <small *ngIf="form.get('surname').errors.minlength">Min length should be {{
                     form.get('surname').errors.minlength.requiredLength }} symbols</small>
             </div>
-        </div>
-        <div>
-            <label>Email</label>
-            <input type="text" placeholder="Email" formControlName="email" nbInput fullWidth shape="semi-round">
-            <div class="validation" *ngIf="form.get('email').invalid && form.get('email').touched ">
-                <small *ngIf="form.get('email').errors.required">Email is required</small>
-            </div>
-        </div>
-
-        <div>
-            <label>Password</label>
-            <input type="password" placeholder="Password" formControlName="password" nbInput fullWidth shape="semi-round">
         </div>
 
         <div class="card" formGroupName="address">
@@ -59,8 +47,7 @@
                 <nb-datepicker #datepicker></nb-datepicker>
             </div>
         </div>
-
-        <button class="btn" type="submit" [disabled]="form.invalid" (click)="editUser()" (keydown.enter)="editUser()" nbButton shape="semi-round" status="success">Edit</button>
-        <button class="btn" type="submit" [disabled]="form.invalid" (click)="addUser()" (keydown.enter)="editUser()" nbButton shape="semi-round" status="success">Submit</button>
-    </form>
+    </ng-container>
+    <button class="btn" type="submit" [disabled]="form.invalid" (click)="editUser()" (keydown.enter)="editUser()" nbButton shape="semi-round" status="success">Edit</button>
+    <button class="btn" type="submit" [disabled]="form.invalid" (click)="addUser()" (keydown.enter)="editUser()" nbButton shape="semi-round" status="success">Submit</button>
 </div>

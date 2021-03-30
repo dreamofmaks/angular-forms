@@ -23,15 +23,16 @@ import { AgGridModule } from 'ag-grid-angular'
 import { BtnCellRenderer } from './user-grid/grid-btn';
 import { HttpClientModule } from '@angular/common/http';
 import { UserGridComponent } from './user-grid/user-grid.component';
-import { FormComponent } from './form/form.component';
+import { FormComponent } from './edit-form/form.component';
 import { HomeComponent } from './home/home.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthGuard } from './guards/auth-guard';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent, pathMatch: 'full'},
+  // {path: '', component: LoginFormComponent, pathMatch: 'full'},
   {path: 'home', component: UserGridComponent, canActivate: [AuthGuard]},
-  {path: 'userform', component: FormComponent}
+  {path: 'userform', component: FormComponent, canActivate: [AuthGuard]},
+  // {path: 'login', component: SignupComponent}
 ];
 
 @NgModule({
@@ -70,7 +71,7 @@ const routes: Routes = [
         allowedDomains: ["localhost:44303"],
         disallowedRoutes: ["localhost:44303/api/auth"]
       }
-    })
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]

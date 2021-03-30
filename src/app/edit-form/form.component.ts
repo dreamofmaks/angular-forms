@@ -35,8 +35,8 @@ export class FormComponent implements OnInit {
     this.form = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.minLength(4)]),
       surname: new FormControl('', [Validators.required, Validators.minLength(4)]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', []),
+      // email: new FormControl('', [Validators.required, Validators.email]),
+      // password: new FormControl('', []),
       address: new FormGroup({
         country: new FormControl('ua'),
         city: new FormControl('', Validators.required),
