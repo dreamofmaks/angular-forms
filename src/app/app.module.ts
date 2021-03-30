@@ -23,16 +23,20 @@ import { AgGridModule } from 'ag-grid-angular'
 import { BtnCellRenderer } from './user-grid/grid-btn';
 import { HttpClientModule } from '@angular/common/http';
 import { UserGridComponent } from './user-grid/user-grid.component';
-import { FormComponent } from './edit-form/form.component';
+import { EditFormComponent } from './edit-form/edit-form.component';
 import { HomeComponent } from './home/home.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthGuard } from './guards/auth-guard';
+import { LoginFormComponent } from './login-form/login-form.component';
+import { LoginComponent } from './login-form/login/login.component';
+import { EditComponent } from './edit-form/edit/edit.component';
+import { SignupFormComponent } from './signup-form/signup-form.component';
 
 const routes: Routes = [
-  // {path: '', component: LoginFormComponent, pathMatch: 'full'},
+  {path: '', component: LoginComponent, pathMatch: 'full'},
   {path: 'home', component: UserGridComponent, canActivate: [AuthGuard]},
-  {path: 'userform', component: FormComponent, canActivate: [AuthGuard]},
-  // {path: 'login', component: SignupComponent}
+  {path: 'userform', component: EditComponent, canActivate: [AuthGuard]},
+  {path: 'signUp', component: SignupFormComponent}
 ];
 
 @NgModule({
@@ -40,8 +44,12 @@ const routes: Routes = [
     AppComponent,
     BtnCellRenderer,
     UserGridComponent,
-    FormComponent,
+    EditFormComponent,
     HomeComponent,
+    LoginFormComponent,
+    LoginComponent,
+    EditComponent,
+    SignupFormComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),

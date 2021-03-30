@@ -22,7 +22,7 @@ export class AppComponent {
   }
   items = [
     {title: 'Home', link: 'home'},
-    {title: 'Form', link: 'userform'}
+    {title: 'New User', link: 'signUp'}
   ];
 
   public get isLoggedIn() {
@@ -35,6 +35,6 @@ export class AppComponent {
   }
 
   signUp() {
-    this.router.navigate(['login']);
+    this.router.navigate(['signUp']);
   }
 }

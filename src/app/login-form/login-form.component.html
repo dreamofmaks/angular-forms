@@ -1,0 +1,12 @@
+<ng-container [formGroup]="form" (ngSubmit)="Submit()">
+    <div class="form-control">
+        <label>Email</label>
+        <input type="text" placeholder="Email" formControlName="email" nbInput fullWidth shape="semi-round" #email>
+    </div>
+
+    <div class="form-control">
+        <label>Password</label>
+        <input type="password" placeholder="Password" formControlName="password" nbInput fullWidth shape="semi-round"
+            #password>
+    </div>
+</ng-container>
