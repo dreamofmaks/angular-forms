@@ -44,8 +44,7 @@ export class EditFormComponent implements OnInit {
     });
 
     this.route.queryParams.subscribe((params) => {
-      const id = Number.parseInt(params.id);
-      if (Number.isNaN(id)) {
+      if (params.id !== undefined) {
         this.getUser(Number.parseInt(params.id));
       }
     })

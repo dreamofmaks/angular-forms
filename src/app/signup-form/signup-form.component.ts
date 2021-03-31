@@ -22,7 +22,7 @@ export class SignupFormComponent implements OnInit {
   addUser() {
     let currentCountryId;
     this.countryService.value$.value.forEach((country) => {
-      if (this.dataForm.form.value.address.country === country.name) {
+      if (this.dataForm.form.value.address.country === country.id) {
         currentCountryId = country.id
       }
     })
@@ -33,7 +33,7 @@ export class SignupFormComponent implements OnInit {
       dateOfBirth: this.dataForm.form.value.address.dateOfBirth,
       email: this.credForm.form.value.email,
       password: {
-        password1: this.credForm.form.value.password,
+        password: this.credForm.form.value.password,
       },
       address: {
         city: {
@@ -47,7 +47,6 @@ export class SignupFormComponent implements OnInit {
         building: this.dataForm.form.value.address.building
       }
     }
-
     this.userService.addUser(user).subscribe(() => {
       this.router.navigate(['home']);
     })

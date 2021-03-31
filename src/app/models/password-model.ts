@@ -1,6 +1,6 @@
 export interface Password {
     id?: string,
-    password1: string,
+    password: string,
     salt?: string,
     userId?: number
 }
