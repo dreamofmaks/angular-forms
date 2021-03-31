@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, Inject, Injectable, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {  UserService } from './services/user-service';
-import { CountryService } from './services/country-service';
+import { ChangeDetectionStrategy, Component, Injectable, OnInit } from '@angular/core';
 import { NbMenuService } from '@nebular/theme';
 import { Router } from '@angular/router';
 import { AuthService } from './services/auth-service';
+import User from './models/user-model';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +23,8 @@ export class AppComponent {
     {title: 'Home', link: 'home'},
     {title: 'New User', link: 'signUp'}
   ];
+
+  currentUser: User;
 
   public get isLoggedIn() {
     return this.authService.isAuthenticated();

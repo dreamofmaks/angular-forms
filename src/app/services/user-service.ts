@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { tap } from 'rxjs/operators';
+import { tap, retry } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Url } from '../../environments/environment';
 import User from "../models/user-model";
@@ -18,6 +18,7 @@ export class UserService{
             tap(val => {
                 this.fetchedUsers.next(val);
             })
+            
         );
     }
 

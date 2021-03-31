@@ -19,7 +19,7 @@ import  User  from '../models/user-model';
                 </nb-card-footer>
           </nb-card>
         </ng-template>
-      <button nbButton status="danger" (click) ="open(myPopup)">Delete</button>
+      <button nbButton status="danger" (click) ="open(myPopup, $event)">Delete</button>
     `,
   })
   @Injectable()
@@ -39,8 +39,9 @@ import  User  from '../models/user-model';
       this.params = params;
     }
 
-    open(dialog: TemplateRef<any>) {
-        this.dialogService.open(dialog).onClose.subscribe(() => {
+    open(dialog: TemplateRef<any>, event: MouseEvent) {
+        this.dialogService.open(dialog).onClose.subscribe((val) => {
+            event.preventDefault();
             const user: User = this.params.data;
             this.sub = this.userService.removeUser(user).subscribe(() => {
                 this.params.api.setRowData(this.userService.fetchedUsers.getValue());

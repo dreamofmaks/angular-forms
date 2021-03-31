@@ -26,7 +26,8 @@ export class SignupFormComponent implements OnInit {
         currentCountryId = country.id
       }
     })
-    let user: User = {
+
+    const user: User = {
       firstName: this.dataForm.form.value.name,
       lastName: this.dataForm.form.value.surname,
       dateOfBirth: this.dataForm.form.value.address.dateOfBirth,

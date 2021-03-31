@@ -14,7 +14,8 @@ import { NbThemeModule,
          NbContextMenuModule, 
          NbMenuModule,
          NbDialogModule,
-         NbCardModule } from '@nebular/theme';
+         NbCardModule,
+         NbUserModule } from '@nebular/theme';
 
 import { AppComponent } from './app.component';
 import { Routes, RouterModule } from '@angular/router';
@@ -30,6 +31,9 @@ import { LoginFormComponent } from './login-form/login-form.component';
 import { LoginComponent } from './login-form/login/login.component';
 import { EditComponent } from './edit-form/edit/edit.component';
 import { SignupFormComponent } from './signup-form/signup-form.component';
+
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth-interceptor';
 
 const routes: Routes = [
   {path: '', component: LoginComponent, pathMatch: 'full'},
@@ -78,8 +82,15 @@ const routes: Routes = [
         disallowedRoutes: ["localhost:44303/api/auth"]
       }
     }),
+    NbUserModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

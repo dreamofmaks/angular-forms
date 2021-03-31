@@ -3,10 +3,12 @@
     <button outline nbButton [nbContextMenu]="items">
       Show Menu
     </button>
-    <button class="btn" nbButton shape="semi-round" (click) = "logOut()" *ngIf="isLoggedIn">Log out</button>
-    <button nbButton class="btn" shape="semi-round" (click) = "signUp()" *ngIf="!isLoggedIn">Sign UP</button>
+    <button class="btn" nbButton shape="semi-round" (click) = "logOut()" *ngIf="isLoggedIn else signUp">Log out</button>
+    <ng-template  #signUp>
+      <button nbButton class="btn" shape="semi-round" (click) = "signUp()">Sign UP</button>
+    </ng-template>
   </nb-layout-header>
-  <nb-sidebar>Sidebar content</nb-sidebar>
+  <nb-sidebar></nb-sidebar>
   <nb-layout-column>
     <router-outlet></router-outlet>
   </nb-layout-column>
