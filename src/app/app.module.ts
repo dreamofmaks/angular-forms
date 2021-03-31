@@ -24,7 +24,6 @@ import { BtnCellRenderer } from './user-grid/grid-btn';
 import { HttpClientModule } from '@angular/common/http';
 import { UserGridComponent } from './user-grid/user-grid.component';
 import { EditFormComponent } from './edit-form/edit-form.component';
-import { HomeComponent } from './home/home.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthGuard } from './guards/auth-guard';
 import { LoginFormComponent } from './login-form/login-form.component';
@@ -45,7 +44,6 @@ const routes: Routes = [
     BtnCellRenderer,
     UserGridComponent,
     EditFormComponent,
-    HomeComponent,
     LoginFormComponent,
     LoginComponent,
     EditComponent,
