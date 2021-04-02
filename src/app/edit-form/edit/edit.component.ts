@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import User from 'src/app/models/user-model';
@@ -33,27 +33,26 @@ export class EditComponent implements OnInit {
       dateOfBirth: this.data.address.dateOfBirth,
       addressId: this.userService.currentUser$.value.addressId,
       address: {
+        id: this.userService.currentUser$.value.address.id,
         country: {
           id: editedCountryId,
-          name: null,
+          name: this.userService.currentUser$.value.address.country.name,
         },
         city: {
           id: this.userService.currentUser$.value.address.cityId,
           name: this.data.address.city,
         },
         street: this.data.address.street,
-        building:  this.data.address.street
+        building:  this.data.address.building
     }
   }
     this.userService.editUser(editedUser).subscribe(() => {
       this.router.navigate(['home']);
     })
-    console.log(editedUser)
   }
 
   getFormValue(value) {
     this.data = value;
-    console.log('DATA', this.data);
   }
 
   Submit(form) {

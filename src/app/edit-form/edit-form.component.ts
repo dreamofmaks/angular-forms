@@ -44,8 +44,9 @@ export class EditFormComponent implements OnInit {
       })
     });
 
-    this.form.valueChanges.subscribe(() => {
-      this.formData.emit(this.form.value);
+    this.form.valueChanges.subscribe((value) => {
+      this.formData.emit(value);
+      console.log(value);
     });
     
     this.route.queryParams.subscribe((params) => {
