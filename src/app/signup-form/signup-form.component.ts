@@ -11,10 +11,11 @@ import { UserService } from '../services/user-service';
 })
 export class SignupFormComponent implements OnInit {
 
-  @ViewChild('dataForm') dataForm;
-  @ViewChild('credForm') credForm;
+
 
   constructor(private readonly countryService: CountryService, private readonly userService: UserService, private readonly router: Router) { }
+
+  data: any;
 
   ngOnInit(): void {
   }
@@ -22,34 +23,42 @@ export class SignupFormComponent implements OnInit {
   addUser() {
     let currentCountryId;
     this.countryService.value$.value.forEach((country) => {
-      if (this.dataForm.form.value.address.country === country.id) {
+      if (this.data.address.country === country.id) {
         currentCountryId = country.id
       }
     })
 
     const user: User = {
-      firstName: this.dataForm.form.value.name,
-      lastName: this.dataForm.form.value.surname,
-      dateOfBirth: this.dataForm.form.value.address.dateOfBirth,
-      email: this.credForm.form.value.email,
+      firstName: this.data.name,
+      lastName: this.data.surname,
+      dateOfBirth: this.data.address.dateOfBirth,
+      email: this.data.email,
       password: {
-        password: this.credForm.form.value.password,
+        password: this.data.password,
       },
       address: {
         city: {
-          name: this.dataForm.form.value.address.city
+          name: this.data.address.city
         },
         country: {
           id: currentCountryId,
-          name: this.dataForm.form.value.address.country,
+          name: "",
         },
-        street: this.dataForm.form.value.address.street,
-        building: this.dataForm.form.value.address.building
+        street:this.data.address.street,
+        building: this.data.address.building
       }
     }
-    this.userService.addUser(user).subscribe(() => {
-      this.router.navigate(['home']);
-    })
+      this.userService.addUser(user).subscribe(() => {
+        this.router.navigate(['home']);
+      })
+    console.log(this.data);
   }
 
+  getUserData(value) {
+    this.data = {...this.data, ...value};
+  }
+
+  getUserLoginData(value) {
+    this.data = {...this.data, ...value};
+  }
 }

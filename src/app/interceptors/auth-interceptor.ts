@@ -10,8 +10,8 @@ export class AuthInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler) : Observable<HttpEvent<any>>{
         req = req.clone()
         if(this.authService.isAuthenticated){
-            console.log('interceptor');
             return next.handle(req);
+            //refresh token here
         }
     }
 }

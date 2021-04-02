@@ -1,4 +1,5 @@
 <div>
-    <app-login-form #form></app-login-form>
-    <button nbButton shape="semi-round" class="btn" (click)="logIn()">Log In</button>
+    <app-login-form (loginData) = "getLoginData($event)">
+        <button type="submit" nbButton shape="semi-round" (click)="logIn()" [disabled] ="valid">Log in</button>
+    </app-login-form>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output, EventEmitter, OnChanges, ɵɵNgOnChangesFeature, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -17,8 +17,9 @@ export class EditFormComponent implements OnInit {
     private readonly userService: UserService,
     private route: ActivatedRoute,
     private readonly router: Router) {
-
+      
   }
+  @Output() formData = new EventEmitter<any>();
 
   form: FormGroup;
 
@@ -35,14 +36,18 @@ export class EditFormComponent implements OnInit {
       name: new FormControl('', [Validators.required, Validators.minLength(4)]),
       surname: new FormControl('', [Validators.required, Validators.minLength(4)]),
       address: new FormGroup({
-        country: new FormControl('ua'),
+        country: new FormControl('', Validators.required),
         city: new FormControl('', Validators.required),
-        dateOfBirth: new FormControl('', []),
+        dateOfBirth: new FormControl('', [Validators.required]),
         street: new FormControl('', [Validators.required]),
         building: new FormControl('', [Validators.required])
       })
     });
 
+    this.form.valueChanges.subscribe(() => {
+      this.formData.emit(this.form.value);
+    });
+    
     this.route.queryParams.subscribe((params) => {
       if (params.id !== undefined) {
         this.getUser(Number.parseInt(params.id));
@@ -51,6 +56,7 @@ export class EditFormComponent implements OnInit {
   }
 
   Submit(value) {
+    console.log(value);
     if (this.form.valid) {
       this.form.reset();
     }
@@ -62,7 +68,7 @@ export class EditFormComponent implements OnInit {
         name: value.firstName,
         surname: value.lastName,
         address: {
-          country: value.address.country.name,
+          country: value.address.country.id,
           city: value.address.city.name,
           building: value.address.building,
           street: value.address.street,

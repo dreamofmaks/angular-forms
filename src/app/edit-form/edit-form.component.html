@@ -26,23 +26,37 @@
                 <nb-option *ngFor="let country of countries$ | async" [value]="country.id">{{ country.name }}
                 </nb-option>
             </nb-select>
+            <div class="validation" *ngIf="form.get('address').get('country').invalid && form.get('address').get('country').touched">
+                <small *ngIf="form.get('address').get('country').errors.required">Country is required</small>
+            </div>
         </div>
         <div class="form-control">
             <input type="text" placeholder="City" formControlName="city" nbInput fullWidth shape="semi-round">
+            <div class="validation" *ngIf="form.get('address').get('city').invalid && form.get('address').get('city').touched">
+                <small *ngIf="form.get('address').get('city').errors.required">City is required</small>
+            </div>
         </div>
         <div class="form-control">
             <input type="text" placeholder="Street" formControlName="street" nbInput fullWidth shape="semi-round">
+            <div class="validation" *ngIf="form.get('address').get('street').invalid && form.get('address').get('street').touched">
+                <small *ngIf="form.get('address').get('city').errors.required">Street name is required</small>
+            </div>
         </div>
         <div class="form-control">
             <input type="text" placeholder="Bulding №" formControlName="building" nbInput fullWidth shape="semi-round">
+            <div class="validation" *ngIf="form.get('address').get('building').invalid && form.get('address').get('building').touched">
+                <small *ngIf="form.get('address').get('building').errors.required">Building number is required</small>
+            </div>
         </div>
         <div class="form-control">
             <label>Date of Birth</label>
             <input nbInput fullWidth shape="semi-round" [nbDatepicker]="datepicker" formControlName="dateOfBirth"
                 placeholder="Date of birth">
             <nb-datepicker #datepicker></nb-datepicker>
+            <div class="validation" *ngIf="form.get('address').get('dateOfBirth').invalid && form.get('address').get('dateOfBirth').touched">
+                <small *ngIf="form.get('address').get('dateOfBirth').errors.required">Date of birth is required</small>
+            </div>
         </div>
     </div>
+    <ng-content></ng-content>
 </ng-container>
-<!-- <button class="btn" type="submit" [disabled]="form.invalid" (click)="editUser()" (keydown.enter)="editUser()" nbButton shape="semi-round" status="success">Edit</button>
-    <button class="btn" type="submit" [disabled]="form.invalid" (click)="addUser()" (keydown.enter)="editUser()" nbButton shape="semi-round" status="success">Submit</button> -->

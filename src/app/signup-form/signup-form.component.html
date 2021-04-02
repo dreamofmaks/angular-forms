@@ -1,5 +1,5 @@
 <div class="container">
-    <app-form #dataForm></app-form>
-    <app-login-form #credForm></app-login-form>
+    <app-form (formData) = getUserData($event)></app-form>
+    <app-login-form (loginData) = getUserLoginData($event)></app-login-form>
     <button nbButton shape="semi-round" (click) = "addUser()">Add</button>
 </div>

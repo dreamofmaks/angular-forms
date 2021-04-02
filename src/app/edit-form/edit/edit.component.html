@@ -1,4 +1,4 @@
 <div class="container">
-    <app-form #form></app-form>
-    <button nbButton shape="semi-round" class="btn" (click) = "edit()">Edit</button>
+    <app-form (formData) = "getFormValue($event)"></app-form>
+    <button type="submit" nbButton shape="semi-round" class="btn" (click)="edit()">Edit</button>  
 </div>
