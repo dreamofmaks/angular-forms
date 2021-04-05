@@ -54,7 +54,6 @@ export class UserGridComponent implements OnInit {
         this.router.navigate(['userform'], {queryParams: {
           'id': this.currentUser.id
         }});
-        console.log(this.currentUser);
   }
 
   onGridReady(params) {

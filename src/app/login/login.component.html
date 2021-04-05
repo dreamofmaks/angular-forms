@@ -1,0 +1,14 @@
+<div class="container">
+    <form [formGroup] = "form">
+        <div class="form-control">
+            <label>Email</label>
+            <input type="email" placeholder="Email" formControlName="email" nbInput fullWidth shape="semi-round" #email>
+        </div>
+
+        <div class="form-control">
+            <label>Password</label>
+            <input type="password" placeholder="Password" formControlName="password" nbInput fullWidth shape="semi-round" #password>
+        </div>
+        <button class="btn" type="submit"  nbButton shape="semi-round" (click) = "logIn(email.value, password.value)" [disabled] = 'form.invalid'>Log In</button>
+    </form>
+</div>
