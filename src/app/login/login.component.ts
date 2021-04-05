@@ -11,15 +11,15 @@ import { AuthService } from '../services/auth-service';
 export class LoginComponent implements OnInit {
 
   constructor(private readonly authService: AuthService, private readonly router: Router) {
-    this.form = new FormGroup({
-      email: new FormControl(null, [Validators.required, Validators.email]),
-      password: new FormControl(null, [Validators.required])
-    })
+   
    }
   form: FormGroup;
 
   ngOnInit(): void {
-    
+    this.form = new FormGroup({
+      email: new FormControl(null, [Validators.required, Validators.email]),
+      password: new FormControl(null, [Validators.required])
+    })
   }
 
   Submit() {
