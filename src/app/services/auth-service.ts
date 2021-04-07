@@ -1,10 +1,11 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
-import { tap } from "rxjs/operators";
+import { BehaviorSubject, Observable, throwError } from "rxjs";
+import { catchError, tap } from "rxjs/operators";
 import { authUrl } from '../../environments/environment';
 import User from "../models/user-model";
-import { JwtHelperService } from '@auth0/angular-jwt'
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Token } from '../models/token-model';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -14,10 +15,10 @@ export class AuthService {
 
     logIn(email: string, password: string): Observable<any> {
         return this.http.post(authUrl, {email: email, password: password}).pipe(
-            tap((user: User) => {
-                this.currentUser$.next(user);
-                localStorage.setItem("JWT", user.token);
-            })
+            tap((token: Token) => {
+                localStorage.setItem("JWT", token.token);
+            }),
+            catchError(this.handleError)
         );
     }
 
@@ -29,4 +30,8 @@ export class AuthService {
     logOut(): void {
         localStorage.removeItem("JWT");
     }
+
+    handleError(error: HttpErrorResponse) {
+        return throwError(error);
+    }   
 }

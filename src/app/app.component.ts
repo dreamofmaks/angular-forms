@@ -21,7 +21,7 @@ export class AppComponent {
   }
   items = [
     {title: 'Home', link: 'home'},
-    {title: 'New User', link: 'signUp'}
+    {title: 'New User', link: 'createUser'}
   ];
 
   currentUser: User;

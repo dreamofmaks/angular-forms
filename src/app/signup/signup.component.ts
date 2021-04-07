@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import User from '../models/user-model';
+import { AuthService } from '../services/auth-service';
 import { CountryService } from '../services/country-service';
 import { UserService } from '../services/user-service';
 
@@ -14,7 +15,8 @@ export class SignupComponent implements OnInit {
 
   constructor(private readonly countryService: CountryService, 
               private readonly userService: UserService, 
-              private readonly router: Router) { }
+              private readonly router: Router,
+              private readonly authService: AuthService) { }
   form: FormGroup;
   readonly countries$ = this.countryService.getCountries();
 
@@ -61,8 +63,10 @@ export class SignupComponent implements OnInit {
         street: this.form.get('address.street').value,
       }
     }
-    this.userService.addUser(user).subscribe(() => {
-      this.router.navigate(['home'])
+    this.userService.signUpUser(user).subscribe(() => {
+      this.authService.logIn(user.email, user.password.password).subscribe(() => {
+        this.router.navigate(['home'])
+      })
     })
   }
 }

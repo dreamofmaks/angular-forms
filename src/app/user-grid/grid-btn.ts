@@ -1,9 +1,10 @@
-import { Component, Injectable, OnDestroy, TemplateRef, ViewChild } from "@angular/core";
+import { Component, DoCheck, Injectable, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { ICellRendererAngularComp } from "ag-grid-angular";
 import { NbDialogService } from '@nebular/theme';
 import { Subscription } from "rxjs";
 import { UserService } from '../services/user-service';
 import  User  from '../models/user-model';
+import { IDatasource, IGetRowsParams } from "ag-grid-community";
 
 @Component({
     selector: 'btn-cell-renderer',
@@ -23,7 +24,7 @@ import  User  from '../models/user-model';
     `,
   })
   @Injectable()
-  export class BtnCellRenderer implements ICellRendererAngularComp { 
+  export class BtnCellRenderer implements ICellRendererAngularComp, OnInit { 
     constructor(private userService: UserService, private dialogService: NbDialogService) {}
 
     @ViewChild('myPopup') myPopup
@@ -39,12 +40,23 @@ import  User  from '../models/user-model';
       this.params = params;
     }
 
+    ngOnInit() {
+    }
+
     open(dialog: TemplateRef<any>, event: MouseEvent) {
         this.dialogService.open(dialog).onClose.subscribe((val) => {
-            event.preventDefault();
-            const user: User = this.params.data;
+            const user: User = this.params.node.data;
+            console.log('params', this.params);
+            const dataSource: IDatasource = {
+              getRows: (params: IGetRowsParams) => {
+                this.userService.getCertainAmountOfUsers(params.startRow, params.endRow).subscribe(data => {
+                  params.successCallback(data, this.userService.countOfUsers$.value);
+                });   
+              }
+            };
             this.sub = this.userService.removeUser(user).subscribe(() => {
-                this.params.api.setRowData(this.userService.fetchedUsers.getValue());
+                this.params.api.setDatasource(dataSource);
+                this.userService.getCountOfUsers().subscribe();
             })
         });
       }

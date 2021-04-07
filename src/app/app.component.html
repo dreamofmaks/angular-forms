@@ -5,7 +5,7 @@
     </button>
     <button class="btn" nbButton shape="semi-round" (click) = "logOut()" *ngIf="isLoggedIn else signUp">Log out</button>
     <ng-template  #signUp>
-      <button nbButton class="btn" shape="semi-round" [routerLink] = "['signUp']">Sign UP</button>
+      <button nbButton class="btn" [routerLink] = "['signUp']">Sign UP</button>
     </ng-template>
   </nb-layout-header>
   <nb-sidebar></nb-sidebar>

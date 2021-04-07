@@ -10,8 +10,10 @@
       [columnDefs]="columnDefs"
       pagination="true"
       rowSelection='single'
-      suppressCopyRowsToClipboard='true'
       showToolPanel = "true"
+      rowModelType="infinite"
+      paginationPageSize="9"
+      cacheBlockSize="9"
       [frameworkComponents] = "frameworkComponents"
       (gridReady)="onGridReady($event)"
       (rowDoubleClicked)="getSelectedUser(myGrid)"

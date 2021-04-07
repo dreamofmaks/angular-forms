@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { tap, retry } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Url } from '../../environments/environment';
 import User from "../models/user-model";
 
@@ -10,6 +10,7 @@ export class UserService{
 
     readonly fetchedUsers = new BehaviorSubject<User[]>([]);
     readonly currentUser$ = new BehaviorSubject<User>(null)
+    readonly countOfUsers$ = new BehaviorSubject<number>(null);
 
     constructor(private readonly http: HttpClient) {}
 
@@ -30,7 +31,7 @@ export class UserService{
         )
     }
 
-    addUser(user: User): Observable<any> {
+    signUpUser(user: User): Observable<any> {
         return this.http.post(Url, user).pipe(
             tap((val: User) => {
                 this.fetchedUsers.next(this.fetchedUsers.value.concat(val));
@@ -38,7 +39,16 @@ export class UserService{
         );
     }
 
+    addUser(user: User) : Observable<any> {
+        return this.http.post(Url + 'createUser', user).pipe(
+            tap((val: User) => {
+                this.fetchedUsers.next(this.fetchedUsers.value.concat(val));
+            })
+        )
+    }
+
     removeUser(user: User): Observable<any> {
+        console.log(user)
         return this.http.delete(Url + user.id).pipe(
             tap((data) => {
                 this.fetchedUsers.next(this.removeById(this.fetchedUsers.value, user.id));
@@ -64,6 +74,19 @@ export class UserService{
             fromItems.splice(index, 1);
         }
         return fromItems;
+    }
+
+    getCertainAmountOfUsers(skip, take): Observable<any> {
+        const params = new HttpParams().append('skip', `${skip}`).append('take', `${take}`);
+        return this.http.get(Url + 'get', {params: params});
+    }
+
+    getCountOfUsers() : Observable<any> {
+        return this.http.get(Url + 'count').pipe(
+            tap((value) => {
+                this.countOfUsers$.next(value);
+            })
+        );
     }
 }
 

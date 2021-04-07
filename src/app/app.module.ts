@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, 
          ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { NbThemeModule,
          NbSidebarModule,  
          NbLayoutModule, 
@@ -32,12 +31,15 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth-interceptor';
 import { SignupComponent } from './signup/signup.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { CreateComponent } from './create/create.component'
 
 const routes: Routes = [
   {path: '', component: LoginComponent, pathMatch: 'full'},
   {path: 'home', component: UserGridComponent, canActivate: [AuthGuard]},
   {path: 'userform', component: EditUserComponent, canActivate: [AuthGuard]},
-  {path: 'signUp', component: SignupComponent}
+  {path: 'signUp', component: SignupComponent},
+  {path: 'createUser', component: CreateComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
@@ -48,6 +50,7 @@ const routes: Routes = [
     LoginComponent,
     SignupComponent,
     EditUserComponent,
+    CreateComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),
