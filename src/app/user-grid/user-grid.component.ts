@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import { GridOptions, IDatasource, IGetRowsParams, RowNode } from 'ag-grid-community';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,8 @@ import { UserService } from '../services/user-service'
 export class UserGridComponent implements OnInit {
 
   constructor(private readonly userService: UserService,
-    private router: Router) { 
+    private router: Router,
+    private readonly route: ActivatedRoute) { 
       
     }
 
@@ -51,8 +52,9 @@ export class UserGridComponent implements OnInit {
 
   getSelectedUser(value) {
     const selectedNodes: RowNode[] = this.myGrid.api.getSelectedNodes();
-    const node = selectedNodes[0]
+    const node = selectedNodes[0];
     this.currentUser = { ...node.data };
+    console.log(this.currentUser);
     this.router.navigate(['userform'], {
       queryParams: {
         'id': this.currentUser.id

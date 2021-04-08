@@ -14,7 +14,8 @@ import { NbThemeModule,
          NbMenuModule,
          NbDialogModule,
          NbCardModule,
-         NbUserModule } from '@nebular/theme';
+         NbUserModule, 
+         NbToastrModule} from '@nebular/theme';
 
 import { AppComponent } from './app.component';
 import { Routes, RouterModule } from '@angular/router';
@@ -32,7 +33,8 @@ import { AuthInterceptor } from './interceptors/auth-interceptor';
 import { SignupComponent } from './signup/signup.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { CreateComponent } from './create/create.component'
+import { CreateComponent } from './create/create.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const routes: Routes = [
   {path: '', component: LoginComponent, pathMatch: 'full'},
@@ -56,6 +58,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     BrowserModule,
     FormsModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
     NgxPaginationModule,
@@ -72,6 +75,7 @@ const routes: Routes = [
     AgGridModule.withComponents([BtnCellRenderer]),
     NbDialogModule.forRoot(),
     NbCardModule,
+    NbToastrModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {

@@ -40,7 +40,7 @@ export class UserService{
     }
 
     addUser(user: User) : Observable<any> {
-        return this.http.post(Url + 'createUser', user).pipe(
+        return this.http.post(Url + 'create', user).pipe(
             tap((val: User) => {
                 this.fetchedUsers.next(this.fetchedUsers.value.concat(val));
             })
@@ -78,7 +78,7 @@ export class UserService{
 
     getLimitedUsers(skip, take): Observable<any> {
         const params = new HttpParams().append('skip', `${skip}`).append('take', `${take}`);
-        return this.http.get(Url + 'getUsers', {params: params});
+        return this.http.get(Url + 'limited', {params: params});
     }
 
     getCountOfUsers() : Observable<any> {

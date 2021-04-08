@@ -15,6 +15,6 @@
                 <small *ngIf="form.get('password').errors.required">Password is required</small>
             </div>
         </div>
-        <button class="btn" type="submit"  nbButton shape="semi-round" (click) = "logIn(email.value, password.value)" [disabled] = 'form.invalid'>Log In</button>
+        <button statis = "danger" class="btn" type="submit"  nbButton shape="semi-round" (click) = "logIn(email.value, password.value, 'danger')" [disabled] = 'form.invalid'>Log In</button>
     </form>
 </div>
