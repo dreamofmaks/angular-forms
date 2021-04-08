@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { tap, retry } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { Url } from '../../environments/environment';
+import { Url, defaultUrl } from '../../environments/environment';
 import User from "../models/user-model";
 
 @Injectable({providedIn: 'root'})
@@ -15,7 +15,7 @@ export class UserService{
     constructor(private readonly http: HttpClient) {}
 
     getAllUsers(): Observable<any> {
-        return this.http.get(Url).pipe(
+        return this.http.get(defaultUrl + 'users').pipe(
             tap(val => {
                 this.fetchedUsers.next(val);
             })
@@ -76,9 +76,9 @@ export class UserService{
         return fromItems;
     }
 
-    getCertainAmountOfUsers(skip, take): Observable<any> {
+    getLimitedUsers(skip, take): Observable<any> {
         const params = new HttpParams().append('skip', `${skip}`).append('take', `${take}`);
-        return this.http.get(Url + 'get', {params: params});
+        return this.http.get(Url + 'getUsers', {params: params});
     }
 
     getCountOfUsers() : Observable<any> {

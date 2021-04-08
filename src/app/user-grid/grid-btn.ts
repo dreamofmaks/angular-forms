@@ -49,7 +49,7 @@ import { IDatasource, IGetRowsParams } from "ag-grid-community";
             console.log('params', this.params);
             const dataSource: IDatasource = {
               getRows: (params: IGetRowsParams) => {
-                this.userService.getCertainAmountOfUsers(params.startRow, params.endRow).subscribe(data => {
+                this.userService.getLimitedUsers(params.startRow, params.endRow).subscribe(data => {
                   params.successCallback(data, this.userService.countOfUsers$.value);
                 });   
               }
