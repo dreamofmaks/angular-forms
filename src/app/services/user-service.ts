@@ -78,13 +78,11 @@ export class UserService{
     }
 
     getLimitedUsers(skip, take, sortBy?, order?): Observable<any> {
-        if(sortBy){
-            const params = new HttpParams().append('skip', `${skip}`).append('take', `${take}`).append('sortBy', `${sortBy}`).append('order', `${order}`);
-            return this.http.get(Url, {params: params});
-        } 
-        const params = new HttpParams().append('skip', `${skip}`).append('take', `${take}`);
+        let params = new HttpParams().append('skip', `${skip}`).append('take', `${take}`);
+        if(sortBy) {
+            params = params.append('sortBy', `${sortBy}`).append('order', `${order}`);
+        }
         return this.http.get(Url, {params: params});
-        
     }
 
     getCountOfUsers() : Observable<any> {
