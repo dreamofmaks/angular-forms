@@ -8,15 +8,12 @@
       style="width: 100%; height: 500px;"
       class="ag-theme-alpine"
       [columnDefs]="columnDefs"
-      pagination="true"
-      rowSelection='single'
-      showToolPanel = "true"
-      rowModelType="infinite"
-      paginationPageSize="9"
-      cacheBlockSize="9"
+      [pagination]="true"
       [frameworkComponents] = "frameworkComponents"
       (gridReady)="onGridReady($event)"
       (rowDoubleClicked)="getSelectedUser(myGrid)"
+      [gridOptions] = 'gridOptions'
+      [animateRows]="true"
     >
     </ag-grid-angular>
   </div>

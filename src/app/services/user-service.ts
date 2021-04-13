@@ -11,6 +11,7 @@ export class UserService{
     readonly fetchedUsers = new BehaviorSubject<User[]>([]);
     readonly currentUser$ = new BehaviorSubject<User>(null)
     readonly countOfUsers$ = new BehaviorSubject<number>(null);
+    readonly sortedUsers$ = new BehaviorSubject<User[]>(null);
 
     constructor(private readonly http: HttpClient) {}
 
@@ -76,9 +77,14 @@ export class UserService{
         return fromItems;
     }
 
-    getLimitedUsers(skip, take): Observable<any> {
+    getLimitedUsers(skip, take, sortBy?, order?): Observable<any> {
+        if(sortBy){
+            const params = new HttpParams().append('skip', `${skip}`).append('take', `${take}`).append('sortBy', `${sortBy}`).append('order', `${order}`);
+            return this.http.get(Url, {params: params});
+        } 
         const params = new HttpParams().append('skip', `${skip}`).append('take', `${take}`);
-        return this.http.get(Url + 'limited', {params: params});
+        return this.http.get(Url, {params: params});
+        
     }
 
     getCountOfUsers() : Observable<any> {
@@ -87,6 +93,14 @@ export class UserService{
                 this.countOfUsers$.next(value);
             })
         );
+    }
+
+    getSortedUsers() {
+        return this.http.get(Url + 'sorted').pipe(
+            tap((users: User[]) => {
+                this.sortedUsers$.next(users)
+            })
+        )
     }
 }
 

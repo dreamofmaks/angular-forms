@@ -15,8 +15,8 @@ import { UserService } from '../services/user-service'
 export class UserGridComponent implements OnInit {
 
   constructor(private readonly userService: UserService,
-    private router: Router,
-    private readonly route: ActivatedRoute) { 
+              private router: Router,
+              private readonly route: ActivatedRoute) { 
       
     }
 
@@ -32,7 +32,7 @@ export class UserGridComponent implements OnInit {
   currentUser: User;
 
   columnDefs = [
-    { field: 'firstName', sortable: true, filter: 'agTextColumnFilter', checkboxSelection: 'true' },
+    { field: 'firstName', sortable: true, filter: 'agTextColumnFilter'},
     { field: 'lastName', filter: 'agTextColumnFilter' },
     { field: 'address.country.name', headerName: 'Country' },
     { field: 'address.city.name', headerName: 'City', },
@@ -50,6 +50,19 @@ export class UserGridComponent implements OnInit {
     this.userService.getCountOfUsers().subscribe();
   }
 
+  gridOptions ={
+    rowSelection: 'multiple',
+    rowModelType: 'infinite',
+    rowBuffer: 0,
+    paginationPageSize: 9,
+    cacheBlockSize: 9,
+    cacheOverflowSize: 2,
+    maxConcurrentDatasourceRequests: 1,
+    maxBlocksInCache: 9,
+    infiniteInitialRowCount: 5,
+    animateRows: true,
+  }
+
   getSelectedUser(value) {
     const selectedNodes: RowNode[] = this.myGrid.api.getSelectedNodes();
     const node = selectedNodes[0];
@@ -65,9 +78,12 @@ export class UserGridComponent implements OnInit {
   onGridReady(params) {
     this.myGrid.api.sizeColumnsToFit();
     const dataSource: IDatasource = {
+      rowCount: this.userService.countOfUsers$.value,
       getRows: (params: IGetRowsParams) => {
-        this.userService.getLimitedUsers(params.startRow, params.endRow).subscribe(data => {
-          params.successCallback(data, this.userService.countOfUsers$.value);
+        const sortModel = params.sortModel[0];
+        this.userService.getLimitedUsers(params.startRow, params.endRow, sortModel?.colId, sortModel?.sort).subscribe(data => {
+          const lastRow = params.endRow >= this.userService.countOfUsers$.value ? this.userService.countOfUsers$.value : null;
+          params.successCallback(data, lastRow);
         });   
       }
     };
