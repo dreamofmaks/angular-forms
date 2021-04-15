@@ -11,6 +11,7 @@
   },
   "private": true,
   "dependencies": {
+    "@ag-grid-enterprise/core": "^25.1.0",
     "@angular/animations": "~11.2.3",
     "@angular/cdk": "^11.0.0",
     "@angular/common": "~11.2.3",
@@ -25,6 +26,7 @@
     "@nebular/theme": "^7.0.0",
     "ag-grid-angular": "^25.1.0",
     "ag-grid-community": "^25.1.0",
+    "ag-grid-enterprise": "^25.1.0",
     "eva-icons": "^1.1.2",
     "ngx-pagination": "^5.0.0",
     "rxjs": "~6.6.0",

@@ -77,10 +77,13 @@ export class UserService{
         return fromItems;
     }
 
-    getLimitedUsers(skip, take, sortBy?, order?): Observable<any> {
+    getLimitedUsers(skip, take, sortBy?, order?, pattern?): Observable<any> {
         let params = new HttpParams().append('skip', `${skip}`).append('take', `${take}`);
         if(sortBy) {
             params = params.append('sortBy', `${sortBy}`).append('order', `${order}`);
+        }
+        if(pattern) {
+            params = params.append('searchPattern', `${pattern}`);
         }
         return this.http.get(Url, {params: params});
     }
@@ -91,14 +94,6 @@ export class UserService{
                 this.countOfUsers$.next(value);
             })
         );
-    }
-
-    getSortedUsers() {
-        return this.http.get(Url + 'sorted').pipe(
-            tap((users: User[]) => {
-                this.sortedUsers$.next(users)
-            })
-        )
     }
 }
 

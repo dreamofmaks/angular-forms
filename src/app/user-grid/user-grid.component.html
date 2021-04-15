@@ -14,6 +14,8 @@
       (rowDoubleClicked)="getSelectedUser(myGrid)"
       [gridOptions] = 'gridOptions'
       [animateRows]="true"
+      [serverSideStoreType] = "'partial'"
+      [defaultColDef] = "defaultColDef"
     >
     </ag-grid-angular>
   </div>

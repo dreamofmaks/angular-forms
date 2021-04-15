@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
-import { GridOptions, IDatasource, IGetRowsParams, RowNode } from 'ag-grid-community';
+import { GridOptions, IDatasource, IGetRowsParams, IServerSideDatasource, RowNode } from 'ag-grid-community';
 import { Subscription } from 'rxjs';
 import { BtnCellRenderer } from './grid-btn';
 import User from '../models/user-model';
 import { UserService } from '../services/user-service'
+import "ag-grid-enterprise";
 
 @Component({
   selector: 'app-user-grid',
@@ -15,8 +16,7 @@ import { UserService } from '../services/user-service'
 export class UserGridComponent implements OnInit {
 
   constructor(private readonly userService: UserService,
-              private router: Router,
-              private readonly route: ActivatedRoute) { 
+              private router: Router) { 
       
     }
 
@@ -25,15 +25,18 @@ export class UserGridComponent implements OnInit {
   frameworkComponents = {
     btnCellRenderer: BtnCellRenderer
   }
-  endRow: number = 9;
   date: Date;
+  defaultColDef = {
+    floatingFilter: true,
+    resizable: true
+  }
   initSub: Subscription;
 
   currentUser: User;
 
   columnDefs = [
     { field: 'firstName', sortable: true, filter: 'agTextColumnFilter'},
-    { field: 'lastName', filter: 'agTextColumnFilter' },
+    { field: 'lastName', sortable: true, filter: 'agTextColumnFilter' },
     { field: 'address.country.name', headerName: 'Country' },
     { field: 'address.city.name', headerName: 'City', },
     { field: 'address.street', headerName: 'Street' },
@@ -50,9 +53,9 @@ export class UserGridComponent implements OnInit {
     this.userService.getCountOfUsers().subscribe();
   }
 
-  gridOptions ={
+  gridOptions : GridOptions ={
     rowSelection: 'multiple',
-    rowModelType: 'infinite',
+    rowModelType: 'serverSide',
     rowBuffer: 0,
     paginationPageSize: 9,
     cacheBlockSize: 9,
@@ -77,17 +80,19 @@ export class UserGridComponent implements OnInit {
 
   onGridReady(params) {
     this.myGrid.api.sizeColumnsToFit();
-    const dataSource: IDatasource = {
-      rowCount: this.userService.countOfUsers$.value,
-      getRows: (params: IGetRowsParams) => {
-        const sortModel = params.sortModel[0];
-        this.userService.getLimitedUsers(params.startRow, params.endRow, sortModel?.colId, sortModel?.sort).subscribe(data => {
-          const lastRow = params.endRow >= this.userService.countOfUsers$.value ? this.userService.countOfUsers$.value : null;
-          params.successCallback(data, lastRow);
-        });   
+    const dataSource: IServerSideDatasource = {
+      getRows: (params) => {
+        const filterModel = params.request.filterModel.firstName;
+        const sortModel = params.request.sortModel[0];
+        this.userService.getLimitedUsers(params.request.startRow, params.request.endRow, sortModel?.colId, sortModel?.sort, filterModel?.filter).subscribe((data) => {
+          const lastRow = params.request.endRow >= this.userService.countOfUsers$.value ? this.userService.countOfUsers$.value : null;
+          params.success({
+            rowData: data,
+            rowCount: lastRow
+          })
+        });
       }
-    };
-    this.myGrid.api.setDatasource(dataSource);
+    };   
+    this.myGrid.api.setServerSideDatasource(dataSource);
   }
 }
-

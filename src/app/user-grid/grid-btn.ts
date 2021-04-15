@@ -4,7 +4,7 @@ import { NbDialogService } from '@nebular/theme';
 import { Subscription } from "rxjs";
 import { UserService } from '../services/user-service';
 import  User  from '../models/user-model';
-import { IDatasource, IGetRowsParams } from "ag-grid-community";
+import { IDatasource, IGetRowsParams, IServerSideDatasource } from "ag-grid-community";
 
 @Component({
     selector: 'btn-cell-renderer',
@@ -46,17 +46,20 @@ import { IDatasource, IGetRowsParams } from "ag-grid-community";
     open(dialog: TemplateRef<any>, event: MouseEvent) {
         this.dialogService.open(dialog).onClose.subscribe((val) => {
             const user: User = this.params.node.data;
-            console.log('params', this.params);
-            const dataSource: IDatasource = {
-              getRows: (params: IGetRowsParams) => {
-                const lastRow = params.endRow >= this.userService.countOfUsers$.value ? this.userService.countOfUsers$.value : null;
-                this.userService.getLimitedUsers(params.startRow, params.endRow).subscribe(data => {
-                  params.successCallback(data, lastRow);
-                });   
+            const dataSource: IServerSideDatasource = {
+              getRows: (params) => {
+                const sortModel = params.request.sortModel[0];
+                const lastRow = params.request.endRow >= this.userService.countOfUsers$.value ? this.userService.countOfUsers$.value : null;
+                this.userService.getLimitedUsers(params.request.startRow, params.request.endRow, sortModel?.colId, sortModel?.sort).subscribe((data) => {
+                  params.success({
+                    rowData: data,
+                    rowCount: lastRow
+                  })
+                });
               }
-            };
+            };   
             this.sub = this.userService.removeUser(user).subscribe(() => {
-                this.params.api.setDatasource(dataSource);
+                this.params.api.setServerSideDatasource(dataSource);
                 this.userService.getCountOfUsers().subscribe();
             })
         });
